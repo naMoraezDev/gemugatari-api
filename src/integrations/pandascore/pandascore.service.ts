@@ -10,7 +10,7 @@ export class PandascoreService {
 
   async getMatches(getMatchesQueryDto: GetMatchesQueryDto) {
     try {
-      return this.pandascoreApiClient.getMatches(getMatchesQueryDto);
+      return await this.pandascoreApiClient.getMatches(getMatchesQueryDto);
     } catch (error) {
       this.logger.error(
         `Error retrieving matches: ${error.message}`,
