@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PandascoreApiClient } from './pandascore.client';
+import { GetMatchParamsDto } from './dtos/get-match-params.dto';
 import { GetMatchesQueryDto } from './dtos/get-matches-query.dto';
 
 @Injectable()
@@ -17,6 +18,18 @@ export class PandascoreService {
         error.stack,
       );
       throw new Error('Failed to retrieve matches in Pandascore API');
+    }
+  }
+
+  async getMatch(getMatchParamsDto: GetMatchParamsDto) {
+    try {
+      return await this.pandascoreApiClient.getMatch(getMatchParamsDto);
+    } catch (error) {
+      this.logger.error(
+        `Error retrieving match: ${error.message}`,
+        error.stack,
+      );
+      throw new Error('Failed to retrieve match in Pandascore API');
     }
   }
 }

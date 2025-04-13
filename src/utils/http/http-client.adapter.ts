@@ -5,9 +5,7 @@ export class FetchHttpClientAdapter implements HttpClient {
     const response = await fetch(input, init);
 
     if (!response.ok) {
-      throw new Error(
-        `Falha na requisição: ${input} ${response.status} ${response.statusText}`,
-      );
+      return null;
     }
 
     return await response.json();

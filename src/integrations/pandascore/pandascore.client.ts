@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GetMatchParamsDto } from './dtos/get-match-params.dto';
 import { GetMatchesQueryDto } from './dtos/get-matches-query.dto';
 import { httpClientFactory } from 'src/utils/http/http-client.factory';
 
@@ -14,6 +15,23 @@ export class PandascoreApiClient {
 
   async getMatches(getMatchesQueryDto: GetMatchesQueryDto) {
     const url = `${this.pandascoreApiBaseUrl}/matches?sort=-status${getMatchesQueryDto.videogame ? `&filter[videogame]=${getMatchesQueryDto.videogame}` : '&filter[videogame]=cod-mw,cs-go,dota-2,league-of-legends,r6-siege,valorant'}${getMatchesQueryDto.limit ? `&page[size]=${getMatchesQueryDto.limit}` : ''}`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: this.pandascoreApiKey,
+      },
+    };
+
+    return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
+
+  async getMatch(getMatchParamsDto: GetMatchParamsDto) {
+    const url = `${this.pandascoreApiBaseUrl}/matches/${getMatchParamsDto.id_or_slug}`;
 
     const options = {
       method: 'GET',

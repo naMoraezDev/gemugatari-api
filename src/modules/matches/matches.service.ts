@@ -4,6 +4,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { PandascoreService } from 'src/integrations/pandascore/pandascore.service';
+import { GetMatchParamsDto } from 'src/integrations/pandascore/dtos/get-match-params.dto';
 import { GetMatchesQueryDto } from 'src/integrations/pandascore/dtos/get-matches-query.dto';
 
 @Injectable()
@@ -23,6 +24,21 @@ export class MatchesService {
 
       throw new ServiceUnavailableException(
         `Matches service is currently unavailable`,
+      );
+    }
+  }
+
+  async getMatch(getMatchParamsDto: GetMatchParamsDto) {
+    try {
+      return await this.pandascoreService.getMatch(getMatchParamsDto);
+    } catch (error) {
+      this.logger.error(
+        `Unexpected error while retrieving match: ${error.message}`,
+        error.stack,
+      );
+
+      throw new ServiceUnavailableException(
+        `Match service is currently unavailable`,
       );
     }
   }

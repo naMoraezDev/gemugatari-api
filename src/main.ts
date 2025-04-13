@@ -14,6 +14,8 @@ async function bootstrap() {
     }),
   );
 
+  app.setGlobalPrefix('v1');
+
   if (process.env.NODE_ENV !== 'production') {
     setupSwagger(app);
   }
