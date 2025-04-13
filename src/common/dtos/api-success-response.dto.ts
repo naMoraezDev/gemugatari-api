@@ -15,12 +15,14 @@ export class ApiSuccessResponseDto<T> {
     required: false,
     example: {
       timestamp: '2025-03-01T12:00:00.000Z',
-      requestId: '123e4567-e89b-12d3-a456-426614174000',
+      request_id: '123e4567-e89b-12d3-a456-426614174000',
+      cached: true,
     },
   })
   meta?: {
     timestamp: string;
-    requestId?: string;
+    request_id?: string;
+    cached?: boolean;
   };
 
   constructor(options: {
@@ -29,7 +31,7 @@ export class ApiSuccessResponseDto<T> {
     errorCode?: string;
     errorMessage?: string;
     errorDetails?: any;
-    requestId?: string;
+    request_id?: string;
   }) {
     this.success = options.success;
 
@@ -41,21 +43,21 @@ export class ApiSuccessResponseDto<T> {
       timestamp: new Date().toISOString(),
     };
 
-    if (options.requestId) {
-      this.meta.requestId = options.requestId;
+    if (options.request_id) {
+      this.meta.request_id = options.request_id;
     }
   }
 
   static success<T>(
     data: T,
     options?: {
-      requestId?: string;
+      request_id?: string;
     },
   ): ApiSuccessResponseDto<T> {
     return new ApiSuccessResponseDto({
       success: true,
       data,
-      requestId: options?.requestId,
+      request_id: options?.request_id,
     });
   }
 }

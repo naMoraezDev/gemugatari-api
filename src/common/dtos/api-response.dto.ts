@@ -25,12 +25,14 @@ export class ApiResponseDto<T> {
     required: false,
     example: {
       timestamp: '2025-03-01T12:00:00.000Z',
-      requestId: '123e4567-e89b-12d3-a456-426614174000',
+      request_id: '123e4567-e89b-12d3-a456-426614174000',
+      cached: false,
     },
   })
   meta?: {
     timestamp: string;
-    requestId?: string;
+    request_id?: string;
+    cached?: boolean;
   };
 
   constructor(options: {
@@ -39,7 +41,8 @@ export class ApiResponseDto<T> {
     errorCode?: string;
     errorMessage?: string;
     errorDetails?: any;
-    requestId?: string;
+    request_id?: string;
+    cached?: boolean;
   }) {
     this.success = options.success;
 
@@ -62,21 +65,27 @@ export class ApiResponseDto<T> {
       timestamp: new Date().toISOString(),
     };
 
-    if (options.requestId) {
-      this.meta.requestId = options.requestId;
+    if (options.request_id) {
+      this.meta.request_id = options.request_id;
+    }
+
+    if (options.cached !== undefined) {
+      this.meta.cached = options.cached;
     }
   }
 
   static success<T>(
     data: T,
     options?: {
-      requestId?: string;
+      request_id?: string;
+      cached?: boolean;
     },
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       success: true,
       data,
-      requestId: options?.requestId,
+      request_id: options?.request_id,
+      cached: options?.cached,
     });
   }
 
@@ -84,14 +93,16 @@ export class ApiResponseDto<T> {
     errorCode: string;
     errorMessage: string;
     errorDetails?: any;
-    requestId?: string;
+    request_id?: string;
+    cached?: boolean;
   }): ApiResponseDto<T> {
     return new ApiResponseDto({
       success: false,
       errorCode: options.errorCode,
       errorMessage: options.errorMessage,
       errorDetails: options.errorDetails,
-      requestId: options.requestId,
+      request_id: options.request_id,
+      cached: options.cached,
     });
   }
 }

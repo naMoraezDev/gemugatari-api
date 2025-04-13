@@ -28,18 +28,36 @@ export class ApiResponseInterceptor<T>
       return next.handle();
     }
 
-    const requestId = uuidv4();
+    const request_id = uuidv4();
+    const isCached = false;
 
     const response = context.switchToHttp().getResponse();
-    response.setHeader('X-Request-ID', requestId);
+    response.setHeader('X-Request-ID', request_id);
 
     return next.handle().pipe(
       map((data) => {
         if (data instanceof ApiResponseDto) {
+          if (!data.meta) {
+            data.meta = {
+              timestamp: new Date().toISOString(),
+            };
+          }
+
+          if (!data.meta.request_id) {
+            data.meta.request_id = request_id;
+          }
+
+          if (data.meta.cached === undefined) {
+            data.meta.cached = isCached;
+          }
+
           return data;
         }
 
-        return ApiResponseDto.success(data, { requestId });
+        return ApiResponseDto.success(data, {
+          request_id,
+          cached: isCached,
+        });
       }),
     );
   }

@@ -22,7 +22,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    const requestId = uuidv4();
+    const request_id = uuidv4();
 
     if (
       this.excludedRoutes.includes(request.url) &&
@@ -59,7 +59,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       errorCode,
       errorMessage,
       errorDetails,
-      requestId,
+      request_id,
       exception,
     });
 
@@ -67,12 +67,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       errorCode,
       errorMessage,
       errorDetails,
-      requestId,
+      request_id,
     });
 
     response
       .status(statusCode)
-      .setHeader('X-Request-ID', requestId)
+      .setHeader('X-Request-ID', request_id)
       .json(apiResponse);
   }
 
