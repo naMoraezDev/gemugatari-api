@@ -33,7 +33,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     let errorCode = 'INTERNAL_SERVER_ERROR';
-    let errorMessage = 'Ocorreu um erro interno no servidor';
+    let errorMessage = 'An internal server error has occurred';
     let errorDetails = null;
 
     if (exception instanceof HttpException) {

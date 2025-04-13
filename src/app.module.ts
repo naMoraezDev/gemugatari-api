@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { MatchesModule } from './modules/matches/matches.module';
 import { GlobalExceptionFilter } from './common/filters/http-exceptions.filter';
 import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
 
@@ -12,10 +11,9 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
       isGlobal: true,
       envFilePath: '.env',
     }),
+    MatchesModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ApiResponseInterceptor,

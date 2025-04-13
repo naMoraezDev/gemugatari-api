@@ -3,20 +3,17 @@ import { ApiProperty } from '@nestjs/swagger';
 export class ApiResponseDto<T> {
   @ApiProperty({
     example: true,
-    description: 'Indica se a operação foi bem-sucedida',
   })
   success: boolean;
 
   @ApiProperty({
-    description: 'Os dados retornados pela resposta',
     required: false,
   })
   data?: T;
 
   @ApiProperty({
-    description: 'Detalhes do erro em caso de falha',
     required: false,
-    example: { code: 'ERROR_CODE', message: 'Mensagem de erro', details: {} },
+    example: { code: 'ERROR_CODE', message: 'Error message', details: {} },
   })
   error?: {
     code: string;
@@ -25,7 +22,6 @@ export class ApiResponseDto<T> {
   };
 
   @ApiProperty({
-    description: 'Metadados adicionais da resposta',
     required: false,
     example: {
       timestamp: '2025-03-01T12:00:00.000Z',
@@ -54,7 +50,7 @@ export class ApiResponseDto<T> {
     if (!options.success) {
       this.error = {
         code: options.errorCode || 'UNKNOWN_ERROR',
-        message: options.errorMessage || 'Um erro desconhecido ocorreu',
+        message: options.errorMessage || 'An unknown error has occurred',
       };
 
       if (options.errorDetails) {
