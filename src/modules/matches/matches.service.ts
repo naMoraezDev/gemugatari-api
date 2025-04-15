@@ -33,7 +33,7 @@ export class MatchesService {
       return await this.pandascoreService.getMatch(param);
     } catch (error) {
       this.logger.error(
-        `Unexpected error while retrieving match: ${error.message}`,
+        `Unexpected error while retrieving match with slug '${param.slug}': ${error.message}`,
         error.stack,
       );
 

@@ -30,4 +30,37 @@ export class PostsService {
       );
     }
   }
+
+  async getPostsByTag(
+    param: DefaultParamDto,
+    query: GetPostsByCategoryQueryDto,
+  ) {
+    try {
+      return await this.wordpressService.getPostsByTag(param, query);
+    } catch (error) {
+      this.logger.error(
+        `Unexpected error while retrieving posts by Tag: ${error.message}`,
+        error.stack,
+      );
+
+      throw new ServiceUnavailableException(
+        `Posts service is currently unavailable`,
+      );
+    }
+  }
+
+  async getPostBySlug(param: DefaultParamDto) {
+    try {
+      return await this.wordpressService.getPostBySlug(param);
+    } catch (error) {
+      this.logger.error(
+        `Unexpected error while retrieving post with slug '${param.slug}': ${error.message}`,
+        error.stack,
+      );
+
+      throw new ServiceUnavailableException(
+        `Posts service is currently unavailable`,
+      );
+    }
+  }
 }

@@ -77,6 +77,73 @@ export class WordpressService {
     });
   }
 
+  async getPostsByTag(
+    param: DefaultParamDto,
+    query: GetPostsByCategoryQueryDto,
+  ) {
+    const url = `${this.wpApiBaseUrl}/posts?tag=${param.slug}${query.page ? `&page=${query.page}` : ''}${query.limit ? `&number=${query.limit}` : ''}`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
+
+  async getPostBySlug(param: DefaultParamDto) {
+    const url = `${this.wpApiBaseUrl}/posts/slug:${param.slug}`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
+
+  async getTags() {
+    const url = `${this.wpApiBaseUrl}/tags`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
+
+  async getTagBySlug(param: DefaultParamDto) {
+    const url = `${this.wpApiBaseUrl}/tags/slug:${param.slug}`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
+
   async authenticate(): Promise<void> {
     if (this.authInProgress) {
       await this.authInProgress;

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TagsModule } from './modules/tags/tags.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { MatchesModule } from './modules/matches/matches.module';
@@ -13,6 +14,7 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
       isGlobal: true,
       envFilePath: '.env',
     }),
+    TagsModule,
     PostsModule,
     MatchesModule,
     CategoriesModule,
