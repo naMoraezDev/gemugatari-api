@@ -3,8 +3,8 @@ import {
   Injectable,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { PandascoreService } from 'src/integrations/pandascore/pandascore.service';
-import { GetMatchParamsDto } from 'src/integrations/pandascore/dtos/get-match-params.dto';
 import { GetMatchesQueryDto } from 'src/integrations/pandascore/dtos/get-matches-query.dto';
 
 @Injectable()
@@ -28,9 +28,9 @@ export class MatchesService {
     }
   }
 
-  async getMatch(getMatchParamsDto: GetMatchParamsDto) {
+  async getMatch(param: DefaultParamDto) {
     try {
-      return await this.pandascoreService.getMatch(getMatchParamsDto);
+      return await this.pandascoreService.getMatch(param);
     } catch (error) {
       this.logger.error(
         `Unexpected error while retrieving match: ${error.message}`,

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { GetMatchParamsDto } from './dtos/get-match-params.dto';
 import { GetMatchesQueryDto } from './dtos/get-matches-query.dto';
+import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { httpClientFactory } from 'src/utils/http/http-client.factory';
 
 @Injectable()
@@ -30,8 +30,8 @@ export class PandascoreApiClient {
     });
   }
 
-  async getMatch(getMatchParamsDto: GetMatchParamsDto) {
-    const url = `${this.pandascoreApiBaseUrl}/matches/${getMatchParamsDto.id_or_slug}`;
+  async getMatch(param: DefaultParamDto) {
+    const url = `${this.pandascoreApiBaseUrl}/matches/${param.slug}`;
 
     const options = {
       method: 'GET',

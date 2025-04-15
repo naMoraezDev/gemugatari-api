@@ -13,10 +13,10 @@ import {
 } from '@nestjs/common';
 import { DetailedMatchDto } from './dtos/detailed-match.dto';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
+import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
-import { GetMatchParamsDto } from 'src/integrations/pandascore/dtos/get-match-params.dto';
 import { GetMatchesQueryDto } from 'src/integrations/pandascore/dtos/get-matches-query.dto';
 
 @ApiTags('matches')
@@ -35,8 +35,8 @@ export class MatchesController {
   })
   @ApiQuery({
     type: String,
-    required: false,
     name: 'limit',
+    required: false,
   })
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: MatchDto, isArray: true })
@@ -63,11 +63,11 @@ export class MatchesController {
     return matches;
   }
 
-  @Get(':id_or_slug')
+  @Get(':slug')
   @ApiParam({
     type: String,
+    name: 'slug',
     required: true,
-    name: 'id_or_slug',
   })
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: DetailedMatchDto })
@@ -79,7 +79,7 @@ export class MatchesController {
     description: 'Service unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getMatch(@Req() request: Request, @Param() param: GetMatchParamsDto) {
+  async getMatch(@Req() request: Request, @Param() param: DefaultParamDto) {
     const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
@@ -91,9 +91,7 @@ export class MatchesController {
     const match = await this.matchesService.getMatch(param);
 
     if (!match) {
-      throw new NotFoundException(
-        `Match with id or slug '${param.id_or_slug}' not found`,
-      );
+      throw new NotFoundException(`Match with slug '${param.slug}' not found`);
     }
 
     await this.redisCacheService.set(cacheKey, match);

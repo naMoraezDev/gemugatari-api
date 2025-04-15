@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { DefaultParamDto } from '../../common/dtos/default-param.dto';
 import { httpClientFactory } from 'src/utils/http/http-client.factory';
+import { GetPostsByCategoryQueryDto } from './dtos/get-posts-by-category-query.dto';
 
 @Injectable()
 export class WordpressService {
@@ -26,6 +28,41 @@ export class WordpressService {
 
   async getCategories() {
     const url = `${this.wpApiBaseUrl}/categories`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
+
+  async getCategoryBySlug(param: DefaultParamDto) {
+    const url = `${this.wpApiBaseUrl}/categories/slug:${param.slug}`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
+
+  async getPostsByCategory(
+    param: DefaultParamDto,
+    query: GetPostsByCategoryQueryDto,
+  ) {
+    const url = `${this.wpApiBaseUrl}/posts?category=${param.slug}${query.page ? `&page=${query.page}` : ''}${query.limit ? `&number=${query.limit}` : ''}`;
 
     const options = {
       method: 'GET',
