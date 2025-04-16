@@ -30,6 +30,7 @@ export function setupSwagger(app: INestApplication): void {
     { name: 'tags' },
     { name: 'posts' },
     { name: 'matches' },
+    { name: 'tournaments' },
   ];
 
   SwaggerModule.setup('docs', app, document);

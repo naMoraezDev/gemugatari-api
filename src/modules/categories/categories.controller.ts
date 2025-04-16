@@ -36,7 +36,7 @@ export class CategoriesController {
   @ApiOperation({
     summary: 'Retrieve all categories',
     description:
-      'Fetches a list of all available categories with their details. Results are cached in Redis for improved performance.',
+      'Fetches a comprehensive list of all available content categories with their details. This endpoint requires API key authentication. Results are cached in Redis for improved performance and reduced latency on subsequent requests. Use this endpoint to populate category navigation menus or filtering options in client applications.',
   })
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: CategoriesResponseDto })
@@ -64,7 +64,7 @@ export class CategoriesController {
   @ApiOperation({
     summary: 'Retrieve a specific category by slug',
     description:
-      'Fetches detailed information for a single category identified by its slug. Returns 404 if the category does not exist. Results are cached in Redis for improved performance.',
+      'Fetches detailed information for a single content category identified by its unique slug. This endpoint requires API key authentication. Returns category metadata that can be used to display category-specific information or to provide context for related content. Returns 404 if the category does not exist. Results are cached in Redis for improved performance on subsequent requests for the same category.',
   })
   @ApiParam({
     type: String,

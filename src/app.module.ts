@@ -5,6 +5,7 @@ import { PostsModule } from './modules/posts/posts.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { MatchesModule } from './modules/matches/matches.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { TournamentsModule } from './modules/tournaments/tournaments.module';
 import { GlobalExceptionFilter } from './common/filters/http-exceptions.filter';
 import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
 
@@ -18,6 +19,7 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
     PostsModule,
     MatchesModule,
     CategoriesModule,
+    TournamentsModule,
   ],
   providers: [
     {

@@ -31,9 +31,9 @@ export class TagsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Retrieve all tags',
+    summary: 'Retrieve all content tags',
     description:
-      'Fetches a list of all available tags with their details. Results are cached in Redis for improved performance and faster subsequent requests.',
+      'Fetches a comprehensive list of all available content tags with their metadata. This endpoint requires API key authentication. Tags represent topic or content classifiers that can be used for content filtering and organization. Results are cached in Redis for improved performance and reduced server load on subsequent requests. Use this endpoint to populate tag clouds, content filtering interfaces, or related tag suggestions.',
   })
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: TagsResponseDto })
@@ -61,7 +61,7 @@ export class TagsController {
   @ApiOperation({
     summary: 'Retrieve a specific tag by slug',
     description:
-      'Fetches detailed information for a single tag identified by its slug. Returns 404 if the tag does not exist. Results are cached in Redis for improved performance.',
+      'Fetches detailed information for a single content tag identified by its unique slug. This endpoint requires API key authentication. The response includes the tag name, description, associated content counts, and related metadata. This data can be used for tag detail pages or to provide context when displaying tagged content. Returns 404 if the tag does not exist. Results are cached in Redis for improved performance on subsequent requests for the same tag.',
   })
   @ApiParam({
     type: String,

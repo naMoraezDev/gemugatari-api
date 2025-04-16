@@ -41,7 +41,7 @@ export class PostsController {
   @ApiOperation({
     summary: 'Retrieve posts by category',
     description:
-      'Fetches a paginated list of posts belonging to a specific category identified by its slug. Results are cached in Redis for improved performance. Optional pagination parameters can be provided.',
+      'Fetches a paginated list of posts belonging to a specific category identified by its slug. This endpoint requires API key authentication. Results can be paginated using optional page and limit parameters. The response includes post summaries suitable for listing views. Results are cached in Redis for improved performance on subsequent identical requests.',
   })
   @ApiParam({
     type: String,
@@ -88,7 +88,7 @@ export class PostsController {
   @ApiOperation({
     summary: 'Retrieve posts by tag',
     description:
-      'Fetches a paginated list of posts associated with a specific tag identified by its slug. Results are cached in Redis for improved performance. Optional pagination parameters can be provided.',
+      'Fetches a paginated list of posts associated with a specific tag identified by its slug. This endpoint requires API key authentication. Results can be paginated using optional page and limit parameters. The response includes post summaries suitable for tag-based content filtering. Results are cached in Redis for improved performance on subsequent identical requests.',
   })
   @ApiParam({
     type: String,
@@ -135,7 +135,7 @@ export class PostsController {
   @ApiOperation({
     summary: 'Retrieve a specific post by slug',
     description:
-      'Fetches detailed information for a single post identified by its slug. Returns 404 if the post does not exist. Results are cached in Redis for improved performance.',
+      'Fetches comprehensive content and metadata for a single post identified by its unique slug. This endpoint requires API key authentication. The response includes the full post content, author information, publication date, and other related metadata. Returns 404 if the post does not exist. Results are cached in Redis for improved performance on subsequent requests for the same post.',
   })
   @ApiParam({
     type: String,

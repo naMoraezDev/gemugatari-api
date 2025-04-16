@@ -43,7 +43,7 @@ export class MatchesController {
   @ApiOperation({
     summary: 'Retrieve matches with filtering options',
     description:
-      'Fetches a list of matches with optional filtering by videogame and limit parameters. Results are cached in Redis for improved performance. The endpoint returns basic match information suitable for listings and overviews.',
+      'Fetches a list of matches with optional filtering by videogame type and result limit. This endpoint requires API key authentication. Results are cached in Redis for improved performance and reduced latency on subsequent identical requests. Use this endpoint to get basic match information suitable for listings and overview displays.',
   })
   @ApiQuery({
     type: String,
@@ -84,7 +84,7 @@ export class MatchesController {
   @ApiOperation({
     summary: 'Retrieve detailed match information by slug',
     description:
-      'Fetches comprehensive information for a single match identified by its slug. Returns 404 if the match does not exist. Results are cached in Redis for improved performance. This endpoint provides more detailed match data compared to the list endpoint.',
+      'Fetches comprehensive information for a single match identified by its unique slug. This endpoint requires API key authentication. Returns detailed match data including scores, status, and other match-specific information. Returns 404 if the match does not exist. Results are cached in Redis for improved performance on subsequent requests for the same match.',
   })
   @ApiParam({
     type: String,
@@ -123,9 +123,9 @@ export class MatchesController {
 
   @Get(':slug/opponents')
   @ApiOperation({
-    summary: 'Retrieve opponents information of a match by slug',
+    summary: 'Retrieve opponents information for a specific match',
     description:
-      'Fetches comprehensive information about opponents of a single match identified by its slug. Returns 404 if the opponents does not exist. Results are cached in Redis for improved performance.',
+      'Fetches detailed information about the teams or players competing in a match identified by its slug. This endpoint requires API key authentication. The response includes competitor profiles, statistics, and related data specific to the match context. Returns 404 if the match or opponent information does not exist. Results are cached in Redis for improved performance and reduced API load.',
   })
   @ApiParam({
     type: String,
