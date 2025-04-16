@@ -12,8 +12,10 @@ import { Request } from 'express';
 import { PostsService } from './posts.service';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
+import { PostDto, PostsResponseDto } from './dtos/posts-response.dto';
 import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
+import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 import { GetPostsByCategoryQueryDto } from 'src/integrations/wordpress/dtos/get-posts-by-category-query.dto';
 
 @ApiTags('posts')
@@ -41,9 +43,9 @@ export class PostsController {
     required: false,
   })
   @HttpCode(HttpStatus.OK)
-  /* @ApiResponseDecorator({ type: MatchDto, isArray: true }) */
+  @ApiResponseDecorator({ type: PostsResponseDto })
   @ApiResponse({
-    description: 'Serviço indisponível',
+    description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getPostsByCategory(
@@ -83,9 +85,9 @@ export class PostsController {
     required: false,
   })
   @HttpCode(HttpStatus.OK)
-  /* @ApiResponseDecorator({ type: MatchDto, isArray: true }) */
+  @ApiResponseDecorator({ type: PostsResponseDto })
   @ApiResponse({
-    description: 'Serviço indisponível',
+    description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getPostsByTag(
@@ -115,9 +117,13 @@ export class PostsController {
     required: true,
   })
   @HttpCode(HttpStatus.OK)
-  /* @ApiResponseDecorator({ type: MatchDto, isArray: true }) */
+  @ApiResponseDecorator({ type: PostDto })
   @ApiResponse({
-    description: 'Serviço indisponível',
+    description: 'Not Found',
+    status: HttpStatus.NOT_FOUND,
+  })
+  @ApiResponse({
+    description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getPostBySlug(

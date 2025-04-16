@@ -11,8 +11,10 @@ import { Request } from 'express';
 import { TagsService } from './tags.service';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
+import { TagDto, TagsResponseDto } from './dtos/tags-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
+import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 
 @ApiTags('tags')
 @Controller('tags')
@@ -24,9 +26,9 @@ export class TagsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  /* @ApiResponseDecorator({ type: MatchDto, isArray: true }) */
+  @ApiResponseDecorator({ type: TagsResponseDto })
   @ApiResponse({
-    description: 'Serviço indisponível',
+    description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getCategories(@Req() request: Request) {
@@ -52,9 +54,13 @@ export class TagsController {
     required: true,
   })
   @HttpCode(HttpStatus.OK)
-  /* @ApiResponseDecorator({ type: MatchDto, isArray: true }) */
+  @ApiResponseDecorator({ type: TagDto })
   @ApiResponse({
-    description: 'Serviço indisponível',
+    description: 'Not Found',
+    status: HttpStatus.NOT_FOUND,
+  })
+  @ApiResponse({
+    description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getCategoryBySlug(

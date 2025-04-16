@@ -8,11 +8,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Request } from 'express';
+import {
+  CategoryDto,
+  CategoriesResponseDto,
+} from './dtos/categories-response.dto';
 import { CategoriesService } from './categories.service';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
+import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -24,9 +29,9 @@ export class CategoriesController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  /* @ApiResponseDecorator({ type: MatchDto, isArray: true }) */
+  @ApiResponseDecorator({ type: CategoriesResponseDto })
   @ApiResponse({
-    description: 'Serviço indisponível',
+    description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getCategories(@Req() request: Request) {
@@ -52,9 +57,13 @@ export class CategoriesController {
     required: true,
   })
   @HttpCode(HttpStatus.OK)
-  /* @ApiResponseDecorator({ type: MatchDto, isArray: true }) */
+  @ApiResponseDecorator({ type: CategoryDto })
   @ApiResponse({
-    description: 'Serviço indisponível',
+    description: 'Not Found',
+    status: HttpStatus.NOT_FOUND,
+  })
+  @ApiResponse({
+    description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getCategoryBySlug(

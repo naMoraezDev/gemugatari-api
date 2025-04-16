@@ -41,7 +41,7 @@ export class MatchesController {
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: MatchDto, isArray: true })
   @ApiResponse({
-    description: 'Serviço indisponível',
+    description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getMatches(
