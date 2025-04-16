@@ -46,4 +46,21 @@ export class PandascoreApiClient {
       init: options,
     });
   }
+
+  async getMatchOpponents(param: DefaultParamDto) {
+    const url = `${this.pandascoreApiBaseUrl}/matches/${param.slug}/opponents`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: this.pandascoreApiKey,
+      },
+    };
+
+    return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
 }

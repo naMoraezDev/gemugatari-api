@@ -3,21 +3,26 @@ import {
   Req,
   Param,
   HttpCode,
+  UseGuards,
   Controller,
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { TagsService } from './tags.service';
+import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { TagDto, TagsResponseDto } from './dtos/tags-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
+import { ApiKeyAuth } from 'src/common/decorators/api-key.decorator';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 
 @ApiTags('tags')
 @Controller('tags')
+@UseGuards(ApiKeyGuard)
+@ApiKeyAuth()
 export class TagsController {
   constructor(
     private readonly tagsService: TagsService,

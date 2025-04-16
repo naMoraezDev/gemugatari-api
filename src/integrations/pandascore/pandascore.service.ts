@@ -32,4 +32,16 @@ export class PandascoreService {
       throw new Error('Failed to retrieve match in Pandascore API');
     }
   }
+
+  async getMatchOpponents(param: DefaultParamDto) {
+    try {
+      return await this.pandascoreApiClient.getMatchOpponents(param);
+    } catch (error) {
+      this.logger.error(
+        `Error retrieving match opponents: ${error.message}`,
+        error.stack,
+      );
+      throw new Error('Failed to retrieve match opponents in Pandascore API');
+    }
+  }
 }

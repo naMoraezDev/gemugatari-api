@@ -4,6 +4,7 @@ import {
   Param,
   Query,
   HttpCode,
+  UseGuards,
   Controller,
   HttpStatus,
   NotFoundException,
@@ -17,8 +18,10 @@ import {
 } from '@nestjs/swagger';
 import { Request } from 'express';
 import { PostsService } from './posts.service';
+import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
+import { ApiKeyAuth } from 'src/common/decorators/api-key.decorator';
 import { PostDto, PostsResponseDto } from './dtos/posts-response.dto';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
@@ -26,6 +29,8 @@ import { GetPostsByCategoryQueryDto } from 'src/integrations/wordpress/dtos/get-
 
 @ApiTags('posts')
 @Controller('posts')
+@UseGuards(ApiKeyGuard)
+@ApiKeyAuth()
 export class PostsController {
   constructor(
     private readonly postsService: PostsService,

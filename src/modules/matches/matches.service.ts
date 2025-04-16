@@ -42,4 +42,19 @@ export class MatchesService {
       );
     }
   }
+
+  async getMatchOpponents(param: DefaultParamDto) {
+    try {
+      return await this.pandascoreService.getMatchOpponents(param);
+    } catch (error) {
+      this.logger.error(
+        `Unexpected error while retrieving opponents for match with slug '${param.slug}': ${error.message}`,
+        error.stack,
+      );
+
+      throw new ServiceUnavailableException(
+        `Match service is currently unavailable`,
+      );
+    }
+  }
 }

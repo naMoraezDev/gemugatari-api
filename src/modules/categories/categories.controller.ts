@@ -3,8 +3,9 @@ import {
   Req,
   Param,
   HttpCode,
-  Controller,
+  UseGuards,
   HttpStatus,
+  Controller,
   NotFoundException,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -13,14 +14,18 @@ import {
   CategoriesResponseDto,
 } from './dtos/categories-response.dto';
 import { CategoriesService } from './categories.service';
+import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
+import { ApiKeyAuth } from 'src/common/decorators/api-key.decorator';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 
 @ApiTags('categories')
 @Controller('categories')
+@UseGuards(ApiKeyGuard)
+@ApiKeyAuth()
 export class CategoriesController {
   constructor(
     private readonly categoriesService: CategoriesService,
