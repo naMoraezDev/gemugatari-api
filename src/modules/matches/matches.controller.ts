@@ -1,6 +1,3 @@
-import { Request } from 'express';
-import { MatchDto } from './dtos/match.dto';
-import { MatchesService } from './matches.service';
 import {
   Get,
   Req,
@@ -11,10 +8,19 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
+import { Request } from 'express';
+import { MatchDto } from './dtos/match.dto';
+import { MatchesService } from './matches.service';
 import { DetailedMatchDto } from './dtos/detailed-match.dto';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
-import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 import { GetMatchesQueryDto } from 'src/integrations/pandascore/dtos/get-matches-query.dto';
@@ -28,6 +34,11 @@ export class MatchesController {
   ) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'Retrieve matches with filtering options',
+    description:
+      'Fetches a list of matches with optional filtering by videogame and limit parameters. Results are cached in Redis for improved performance. The endpoint returns basic match information suitable for listings and overviews.',
+  })
   @ApiQuery({
     type: String,
     required: false,
@@ -64,6 +75,11 @@ export class MatchesController {
   }
 
   @Get(':slug')
+  @ApiOperation({
+    summary: 'Retrieve detailed match information by slug',
+    description:
+      'Fetches comprehensive information for a single match identified by its slug. Returns 404 if the match does not exist. Results are cached in Redis for improved performance. This endpoint provides more detailed match data compared to the list endpoint.',
+  })
   @ApiParam({
     type: String,
     name: 'slug',

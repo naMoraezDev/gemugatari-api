@@ -13,10 +13,10 @@ import {
   CategoriesResponseDto,
 } from './dtos/categories-response.dto';
 import { CategoriesService } from './categories.service';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 
 @ApiTags('categories')
@@ -28,6 +28,11 @@ export class CategoriesController {
   ) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'Retrieve all categories',
+    description:
+      'Fetches a list of all available categories with their details. Results are cached in Redis for improved performance.',
+  })
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: CategoriesResponseDto })
   @ApiResponse({
@@ -51,6 +56,11 @@ export class CategoriesController {
   }
 
   @Get(':slug')
+  @ApiOperation({
+    summary: 'Retrieve a specific category by slug',
+    description:
+      'Fetches detailed information for a single category identified by its slug. Returns 404 if the category does not exist. Results are cached in Redis for improved performance.',
+  })
   @ApiParam({
     type: String,
     name: 'slug',

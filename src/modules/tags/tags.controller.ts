@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { TagsService } from './tags.service';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { TagDto, TagsResponseDto } from './dtos/tags-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 
 @ApiTags('tags')
@@ -25,6 +25,11 @@ export class TagsController {
   ) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'Retrieve all tags',
+    description:
+      'Fetches a list of all available tags with their details. Results are cached in Redis for improved performance and faster subsequent requests.',
+  })
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: TagsResponseDto })
   @ApiResponse({
@@ -48,6 +53,11 @@ export class TagsController {
   }
 
   @Get(':slug')
+  @ApiOperation({
+    summary: 'Retrieve a specific tag by slug',
+    description:
+      'Fetches detailed information for a single tag identified by its slug. Returns 404 if the tag does not exist. Results are cached in Redis for improved performance.',
+  })
   @ApiParam({
     type: String,
     name: 'slug',
@@ -81,7 +91,7 @@ export class TagsController {
       throw new NotFoundException(`Tag with slug '${param.slug}' not found`);
     }
 
-    await this.redisCacheService.set(cacheKey, tag, 100);
+    await this.redisCacheService.set(cacheKey, tag);
 
     return tag;
   }

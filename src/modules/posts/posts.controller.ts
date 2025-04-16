@@ -8,12 +8,18 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { Request } from 'express';
 import { PostsService } from './posts.service';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { PostDto, PostsResponseDto } from './dtos/posts-response.dto';
-import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 import { GetPostsByCategoryQueryDto } from 'src/integrations/wordpress/dtos/get-posts-by-category-query.dto';
@@ -27,6 +33,11 @@ export class PostsController {
   ) {}
 
   @Get('category/:slug')
+  @ApiOperation({
+    summary: 'Retrieve posts by category',
+    description:
+      'Fetches a paginated list of posts belonging to a specific category identified by its slug. Results are cached in Redis for improved performance. Optional pagination parameters can be provided.',
+  })
   @ApiParam({
     type: String,
     name: 'slug',
@@ -69,6 +80,11 @@ export class PostsController {
   }
 
   @Get('tag/:slug')
+  @ApiOperation({
+    summary: 'Retrieve posts by tag',
+    description:
+      'Fetches a paginated list of posts associated with a specific tag identified by its slug. Results are cached in Redis for improved performance. Optional pagination parameters can be provided.',
+  })
   @ApiParam({
     type: String,
     name: 'slug',
@@ -111,6 +127,11 @@ export class PostsController {
   }
 
   @Get(':slug')
+  @ApiOperation({
+    summary: 'Retrieve a specific post by slug',
+    description:
+      'Fetches detailed information for a single post identified by its slug. Returns 404 if the post does not exist. Results are cached in Redis for improved performance.',
+  })
   @ApiParam({
     type: String,
     name: 'slug',
