@@ -16,7 +16,7 @@ export class ApiSuccessResponseDto<T> {
     example: {
       timestamp: '2025-03-01T12:00:00.000Z',
       request_id: '123e4567-e89b-12d3-a456-426614174000',
-      cached: true,
+      cached: false,
     },
   })
   meta?: {
