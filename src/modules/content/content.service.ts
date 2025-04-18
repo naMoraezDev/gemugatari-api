@@ -6,18 +6,30 @@ import {
 import * as puppeteer from 'puppeteer';
 import { GeminiService } from 'src/integrations/gemini/gemini.service';
 import { RewrittenArticle } from './interfaces/rewritten-article.interface';
+import { WordpressService } from 'src/integrations/wordpress/wordpress.service';
 
 @Injectable()
 export class ContentService {
-  constructor(private readonly geminiService: GeminiService) {}
+  constructor(
+    private readonly geminiService: GeminiService,
+    private readonly wordpressService: WordpressService,
+  ) {}
 
-  async scrapeAndRewriteArticle(articleUrl: string): Promise<RewrittenArticle> {
+  async generateContent(articleUrl: string) {
     try {
       const articleContent = await this.extractArticleContent(articleUrl);
 
       const rewrittenArticle = await this.rewriteArticleContent(articleContent);
 
-      return rewrittenArticle;
+      const created = await this.wordpressService.createDraftPost({
+        title: rewrittenArticle.title || '',
+        content: rewrittenArticle.content || '',
+        excerpt: rewrittenArticle.description || '',
+      });
+
+      return {
+        created_post_url: created.URL,
+      };
     } catch (error) {
       throw new InternalServerErrorException(
         `Failed to process article: ${error.message}`,

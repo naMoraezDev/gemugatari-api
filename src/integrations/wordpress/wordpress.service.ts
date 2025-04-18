@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { PostData } from './interfaces/post-data.interface';
 import { DefaultParamDto } from '../../common/dtos/default-param.dto';
 import { httpClientFactory } from 'src/utils/http/http-client.factory';
+import { WordPressPostResponse } from './interfaces/wp-post-response.interface';
 import { GetPostsByCategoryQueryDto } from './dtos/get-posts-by-category-query.dto';
 
 @Injectable()
@@ -139,6 +141,36 @@ export class WordpressService {
     };
 
     return await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+  }
+
+  async createDraftPost(postData: PostData) {
+    await this.ensureAuthenticated();
+
+    postData.status = 'draft';
+
+    const url = `${this.wpApiBaseUrl}/posts/new`;
+
+    const formData = new URLSearchParams();
+
+    for (const [key, value] of Object.entries(postData)) {
+      if (value !== undefined) {
+        formData.append(key, value.toString());
+      }
+    }
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString(),
+    };
+
+    return await httpClientFactory().request<WordPressPostResponse>({
       input: url,
       init: options,
     });
