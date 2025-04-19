@@ -7,6 +7,7 @@ import {
   UseGuards,
   HttpStatus,
   Controller,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -58,10 +59,14 @@ export class VideosController {
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: YouTubeSearchListResponseDto })
   @ApiResponse({
+    description: 'Not found',
+    status: HttpStatus.NOT_FOUND,
+  })
+  @ApiResponse({
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getCategories(
+  async getLatestVideos(
     @Req() request: Request,
     @Param() param: VideosParamDto,
     @Query() query: VideosQueryDto,
@@ -79,12 +84,18 @@ export class VideosController {
       query,
     );
 
+    if (!latestVideos) {
+      throw new NotFoundException(
+        `Youtube latest videos for channel with id '${param.id}' not found`,
+      );
+    }
+
     await this.redisCacheService.set(cacheKey, latestVideos);
 
     return latestVideos;
   }
 
-  @Get('channel/:id/')
+  @Get('channels/:id/')
   @ApiOperation({
     summary: 'Retrieve YouTube channel information',
     description:
@@ -97,6 +108,10 @@ export class VideosController {
   })
   @HttpCode(HttpStatus.OK)
   @ApiResponseDecorator({ type: YouTubeChannelResponseDto })
+  @ApiResponse({
+    description: 'Not found',
+    status: HttpStatus.NOT_FOUND,
+  })
   @ApiResponse({
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
@@ -114,6 +129,10 @@ export class VideosController {
     }
 
     const channelData = await this.youtubeService.getChannelData(param);
+
+    if (!channelData) {
+      throw new NotFoundException(`Channel with id '${param.id}' not found`);
+    }
 
     await this.redisCacheService.set(cacheKey, channelData);
 

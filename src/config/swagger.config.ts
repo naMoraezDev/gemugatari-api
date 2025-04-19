@@ -31,6 +31,8 @@ export function setupSwagger(app: INestApplication): void {
     { name: 'posts' },
     { name: 'matches' },
     { name: 'tournaments' },
+    { name: 'youtube' },
+    { name: 'twitch' },
     { name: 'content' },
   ];
 
