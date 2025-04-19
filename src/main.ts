@@ -18,9 +18,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('v1');
 
-  if (process.env.NODE_ENV !== 'production') {
-    setupSwagger(app);
-  }
+  setupSwagger(app);
 
   await app.listen(process.env.PORT ?? 3333);
 }
