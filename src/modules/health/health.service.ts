@@ -60,7 +60,7 @@ export class HealthService {
       'WP_ADMIN_USERNAME',
       'WP_ADMIN_PASSWORD',
       'PANDASCORE_API_BASE_URL',
-      'PANDASCORE_PAI_KEY',
+      'PANDASCORE_API_KEY',
       'GOOGLE_API_KEY',
       'GOOGLE_API_BASE_URL',
       'TWITCH_CLIENT_ID',
