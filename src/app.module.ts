@@ -10,6 +10,7 @@ import { MatchesModule } from './modules/matches/matches.module';
 import { ContentModule } from './modules/content/content.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TournamentsModule } from './modules/tournaments/tournaments.module';
+import { UserProfileModule } from './modules/user-profile/user-profile.module';
 import { GlobalExceptionFilter } from './common/filters/http-exceptions.filter';
 import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
 
@@ -28,6 +29,7 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
     ContentModule,
     CategoriesModule,
     TournamentsModule,
+    UserProfileModule,
   ],
   providers: [
     {
