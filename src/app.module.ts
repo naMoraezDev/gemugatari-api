@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TagsModule } from './modules/tags/tags.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { YoutubeModule } from './modules/youtube/youtube.module';
 import { MatchesModule } from './modules/matches/matches.module';
 import { ContentModule } from './modules/content/content.module';
 import { CategoriesModule } from './modules/categories/categories.module';
@@ -18,6 +19,7 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
     }),
     TagsModule,
     PostsModule,
+    YoutubeModule,
     MatchesModule,
     ContentModule,
     CategoriesModule,
