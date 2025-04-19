@@ -20,13 +20,7 @@ async function bootstrap() {
 
   setupSwagger(app);
 
-  if (process.env.NODE_ENV !== 'production') {
-    await app.listen(process.env.PORT ?? 3333);
-  }
-
-  return app;
+  await app.listen(process.env.PORT ?? 3333);
 }
 
 bootstrap();
-
-export default bootstrap;
