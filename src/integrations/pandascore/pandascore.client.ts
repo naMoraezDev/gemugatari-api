@@ -10,7 +10,7 @@ export class PandascoreApiClient {
   private readonly pandascoreApiBaseUrl: string;
 
   constructor() {
-    this.pandascoreApiKey = process.env.PANDASCORE_PAI_KEY || '';
+    this.pandascoreApiKey = process.env.PANDASCORE_API_KEY || '';
     this.pandascoreApiBaseUrl = process.env.PANDASCORE_API_BASE_URL || '';
   }
 
