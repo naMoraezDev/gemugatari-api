@@ -25,7 +25,7 @@ import { UserProfileResponseDto } from './dtos/user-profile-response.dto';
 import { FirebaseUser } from 'src/integrations/firebase/firebase.interface';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 
-@ApiTags('user-profile')
+@ApiTags('user profile')
 @Controller('user/profile')
 @ApiBearerAuth()
 @UseGuards(FirebaseAuthGuard)
