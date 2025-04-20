@@ -6,7 +6,7 @@ export function setupSwagger(app: INestApplication): void {
   const options = new DocumentBuilder()
     .setTitle('GemuGatari API')
     .setDescription(
-      'API integrating WordPress, Pandascore (e-sports), YouTube, Twitch and Gemini (content generation), with user management via Firebase/Firestore.',
+      'API integrating WordPress, Pandascore (e-sports), YouTube, Twitch and Gemini (content generation), with user management via Firebase/Firestore and Redis for caching.',
     )
     .setVersion('1.0')
     .addBearerAuth(
