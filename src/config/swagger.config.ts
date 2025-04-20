@@ -49,6 +49,7 @@ export function setupSwagger(app: INestApplication): void {
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
+      defaultModelsExpandDepth: 0,
     },
     customJs: [
       'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
