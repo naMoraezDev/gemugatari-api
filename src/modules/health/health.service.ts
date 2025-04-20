@@ -28,7 +28,7 @@ export class HealthService {
       const healthStatus: HealthStatus = {
         status: 'ok',
         timestamp: new Date().toISOString(),
-        uptime: `${Math.floor(process.uptime() / 60)} minutos`,
+        uptime: `${Math.floor(process.uptime() / 60)} minutes`,
         checks: {},
       };
 
@@ -119,11 +119,11 @@ export class HealthService {
         status: result.value.redis.status === 'up' ? 'ok' : 'error',
         message:
           result.value.redis.status === 'up'
-            ? 'Conexão com Redis estabelecida'
+            ? 'Redis connection established'
             : undefined,
         error:
           result.value.redis.status !== 'up'
-            ? result.value.redis.message || 'Falha na comunicação com Redis'
+            ? result.value.redis.message || 'Communication failure with Redis'
             : undefined,
       };
 
@@ -133,7 +133,7 @@ export class HealthService {
     } else {
       healthStatus.checks.redis = {
         status: 'error',
-        error: `Falha ao verificar Redis: ${result.reason?.message || 'Erro desconhecido'}`,
+        error: `Failed to verify Redis: ${result.reason?.message || 'Unknown error'}`,
       };
       healthStatus.status = 'degraded';
     }
@@ -143,11 +143,11 @@ export class HealthService {
     return {
       status: 'error',
       timestamp: new Date().toISOString(),
-      uptime: `${Math.floor(process.uptime() / 60)} minutos`,
+      uptime: `${Math.floor(process.uptime() / 60)} minutes`,
       checks: {},
       service: {
+        name: 'gg-api',
         env: process.env.NODE_ENV || 'development',
-        name: 'auth-api',
         version: process.env.npm_package_version || '0.0.1',
       },
     };
