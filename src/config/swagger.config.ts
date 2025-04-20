@@ -4,7 +4,7 @@ import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 
 export function setupSwagger(app: INestApplication): void {
   const options = new DocumentBuilder()
-    .setTitle('GGatari API')
+    .setTitle('ggatari API')
     .setDescription(
       'API integrating WordPress, Pandascore (e-sports), YouTube, Twitch and Gemini (content generation), with user management via Firebase/Firestore and Redis for caching.',
     )
