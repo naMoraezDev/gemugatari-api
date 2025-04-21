@@ -34,7 +34,7 @@ export class ContentController {
       'Takes a URL as input, processes the content at that location using AI, and publishes the resulting generated content. Requires API key authentication.',
   })
   @HttpCode(HttpStatus.CREATED)
-  @ApiResponseDecorator({ type: SinglePostProcessingResultDto })
+  @ApiResponseDecorator({ status: 201, type: SinglePostProcessingResultDto })
   @ApiResponse({
     description: 'Internal Server Error',
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -50,7 +50,7 @@ export class ContentController {
       'Extracts news article URLs from a source URL, processes a specified number of articles using AI, and publishes the resulting content. The process_limit parameter controls how many articles to process. Requires API key authentication.',
   })
   @HttpCode(HttpStatus.CREATED)
-  @ApiResponseDecorator({ type: PostProcessingResponseDto })
+  @ApiResponseDecorator({ status: 201, type: PostProcessingResponseDto })
   @ApiResponse({
     description: 'Internal Server Error',
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -69,7 +69,10 @@ export class ContentController {
       'Takes a topic as input and publishes the resulting generated content. Requires API key authentication.',
   })
   @HttpCode(HttpStatus.CREATED)
-  @ApiResponseDecorator({ type: SinglePostByTopicProcessingResultDto })
+  @ApiResponseDecorator({
+    status: 201,
+    type: SinglePostByTopicProcessingResultDto,
+  })
   @ApiResponse({
     description: 'Internal Server Error',
     status: HttpStatus.INTERNAL_SERVER_ERROR,
