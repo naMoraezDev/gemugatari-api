@@ -90,8 +90,6 @@ export class ContentService {
         excerpt: contentResult.description || '',
       });
 
-      console.log(result);
-
       return {
         topic,
         created_post_url: result.URL,
