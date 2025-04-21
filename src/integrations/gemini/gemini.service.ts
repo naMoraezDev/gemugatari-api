@@ -125,6 +125,104 @@ export class GeminiService {
     }
   }
 
+  async generateContentFromTopic(topic: string): Promise<{
+    title?: string;
+    content?: string;
+    description?: string;
+  }> {
+    try {
+      const titlePrompt = `
+      Crie um título atrativo, original e SEO-friendly para um artigo sobre o seguinte assunto:
+      
+      ${topic}
+      
+      INSTRUÇÕES:
+      1. Retorne APENAS o título, sem formatação adicional
+      2. O título deve ter entre 50-70 caracteres
+      3. Deve ser em português do Brasil
+      4. Não use aspas ou outros caracteres especiais
+      5. Não adicione introduções, explicações ou outros textos
+      6. Defina um ângulo ou abordagem específica para o assunto que possa ser desenvolvida em profundidade
+    `;
+
+      const titleResponse = await this.generativeAI.models.generateContent({
+        model: this.modelName,
+        contents: titlePrompt,
+      });
+
+      const title = titleResponse.text?.trim();
+
+      const descriptionPrompt = `
+      Crie uma descrição envolvente para um artigo com o seguinte título:
+      
+      "${title}"
+      
+      Assunto principal: ${topic}
+      
+      INSTRUÇÕES CRÍTICAS:
+      1. A descrição deve ter 1 parágrafo de 2 linhas
+      2. Desenvolva especificamente a abordagem ou ângulo sugerido no título
+      3. Introduza os principais pontos que serão abordados no artigo completo
+      4. Use tom profissional mas acessível
+      6. Retorne APENAS o resultado descrição, sem qualquer texto adicional
+      7. Escreva em português do Brasil
+      8. Estabeleça a linha narrativa que o conteúdo completo seguirá
+    `;
+
+      const descriptionResponse =
+        await this.generativeAI.models.generateContent({
+          model: this.modelName,
+          contents: descriptionPrompt,
+        });
+
+      const description = this.advancedCleanupHTML(descriptionResponse.text);
+
+      const contentPrompt = `
+      Crie um artigo completo e detalhado para o seguinte título e descrição:
+      
+      Título: "${title}"
+      
+      Descrição: ${description}
+      
+      Assunto principal: ${topic}
+      
+      INSTRUÇÕES CRÍTICAS:
+      1. O artigo deve ter pelo menos 800 palavras
+      2. Mantenha absoluta consistência narrativa com o título e a descrição
+      3. Desenvolva os pontos específicos mencionados na descrição
+      4. Mantenha o mesmo tom, estilo e abordagem estabelecidos na descrição
+      5. Divida o conteúdo em seções lógicas com subtítulos que reflitam o ângulo estabelecido no título
+      6. Inclua informações relevantes, dados, exemplos e análises que aprofundem o tema conforme abordado no título
+      7. FORMATE o artigo como HTML válido para WordPress:
+         - Use <p> para parágrafos
+         - Use <h2> para subtítulos importantes
+         - Use <ul> e <li> para listas quando apropriado
+         - Use <strong> para destaque de informações importantes
+         - Use <em> para ênfase secundária
+         - Use <blockquote> para citações quando relevante
+      8. Retorne APENAS o HTML do artigo, sem qualquer texto adicional
+      9. Escreva em português do Brasil
+      10. O conteúdo deve parecer uma extensão natural da descrição, formando uma narrativa unificada
+    `;
+
+      const contentResponse = await this.generativeAI.models.generateContent({
+        model: this.modelName,
+        contents: contentPrompt,
+      });
+
+      const content = this.advancedCleanupHTML(contentResponse.text);
+
+      return {
+        title,
+        content,
+        description,
+      };
+    } catch (error) {
+      console.error('Error generating content from topic with Gemini:', error);
+      throw new Error(`Gemini API Failure: ${error.message}`);
+    }
+  }
+
   private advancedCleanupHTML(html?: string): string {
     if (!html) return '';
 

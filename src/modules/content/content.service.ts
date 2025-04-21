@@ -29,7 +29,7 @@ export class ContentService {
 
       return {
         source_url: articleUrl,
-        created_post_url: result.created_post_url,
+        created_post_url: result.URL,
       };
     } catch (error) {
       throw new InternalServerErrorException(
@@ -77,6 +77,30 @@ export class ContentService {
       results: results,
       failed_urls: failedUrls,
     };
+  }
+
+  async generateContentFromTopic(topic: string) {
+    try {
+      const contentResult =
+        await this.geminiService.generateContentFromTopic(topic);
+
+      const result = await this.wordpressService.createDraftPost({
+        title: contentResult.title || '',
+        content: contentResult.content || '',
+        excerpt: contentResult.description || '',
+      });
+
+      console.log(result);
+
+      return {
+        topic,
+        created_post_url: result.URL,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Failed to generate content from topic: ${error.message}`,
+      );
+    }
   }
 
   async extractNewsUrls(

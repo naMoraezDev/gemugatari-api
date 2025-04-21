@@ -59,3 +59,15 @@ export class PostProcessingResponseDto {
   })
   failed_urls: string[];
 }
+
+export class SinglePostByTopicProcessingResultDto {
+  @ApiProperty({
+    example: 'Interesting article topic',
+  })
+  topic: string;
+
+  @ApiProperty({
+    example: 'https://gamingblog.wordpress.com/?p=754',
+  })
+  created_post_url: string;
+}

@@ -9,6 +9,7 @@ import {
 import {
   PostProcessingResponseDto,
   SinglePostProcessingResultDto,
+  SinglePostByTopicProcessingResultDto,
 } from './dtos/post-processing-response.dto';
 import { ContentService } from './content.service';
 import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
@@ -17,6 +18,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GenerateContentRequestDto } from './dtos/generate-content-request.dto';
 import { GenerateContentsRequestDto } from './dtos/generate-contents-request.dto';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
+import { GenerateContentFromTopicRequestDto } from './dtos/generate-content-from-topic-request.dto';
 
 @ApiTags('content')
 @Controller('content')
@@ -58,5 +60,23 @@ export class ContentController {
       body.url,
       body.process_limit,
     );
+  }
+
+  @Post('topic/ai-generate/publish')
+  @ApiOperation({
+    summary: 'Generate AI content for a given topic',
+    description:
+      'Takes a topic as input and publishes the resulting generated content. Requires API key authentication.',
+  })
+  @HttpCode(HttpStatus.CREATED)
+  @ApiResponseDecorator({ type: SinglePostByTopicProcessingResultDto })
+  @ApiResponse({
+    description: 'Internal Server Error',
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+  })
+  async generateContentFromTopic(
+    @Body() body: GenerateContentFromTopicRequestDto,
+  ) {
+    return this.contentService.generateContentFromTopic(body.topic);
   }
 }
