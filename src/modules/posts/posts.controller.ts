@@ -50,12 +50,22 @@ export class PostsController {
   })
   @ApiQuery({
     type: String,
-    name: 'page',
+    name: 'first',
     required: false,
   })
   @ApiQuery({
     type: String,
-    name: 'limit',
+    name: 'last',
+    required: false,
+  })
+  @ApiQuery({
+    type: String,
+    name: 'after',
+    required: false,
+  })
+  @ApiQuery({
+    type: String,
+    name: 'before',
     required: false,
   })
   @HttpCode(HttpStatus.OK)
@@ -77,11 +87,11 @@ export class PostsController {
       return ApiResponseDto.success(cached, { cached: true });
     }
 
-    const posts = await this.postsService.getPostsByCategory(param, query);
+    const result = await this.postsService.getPostsByCategory(param, query);
 
-    await this.redisCacheService.set(cacheKey, posts);
+    await this.redisCacheService.set(cacheKey, result);
 
-    return posts;
+    return result;
   }
 
   @Get('tag/:slug')
@@ -97,12 +107,22 @@ export class PostsController {
   })
   @ApiQuery({
     type: String,
-    name: 'page',
+    name: 'first',
     required: false,
   })
   @ApiQuery({
     type: String,
-    name: 'limit',
+    name: 'last',
+    required: false,
+  })
+  @ApiQuery({
+    type: String,
+    name: 'after',
+    required: false,
+  })
+  @ApiQuery({
+    type: String,
+    name: 'before',
     required: false,
   })
   @HttpCode(HttpStatus.OK)
@@ -124,11 +144,11 @@ export class PostsController {
       return ApiResponseDto.success(cached, { cached: true });
     }
 
-    const posts = await this.postsService.getPostsByTag(param, query);
+    const result = await this.postsService.getPostsByTag(param, query);
 
-    await this.redisCacheService.set(cacheKey, posts);
+    await this.redisCacheService.set(cacheKey, result);
 
-    return posts;
+    return result;
   }
 
   @Get(':slug')
@@ -164,14 +184,14 @@ export class PostsController {
       return ApiResponseDto.success(cached, { cached: true });
     }
 
-    const post = await this.postsService.getPostBySlug(param);
+    const result = await this.postsService.getPostBySlug(param);
 
-    if (!post) {
+    if (!result.post) {
       throw new NotFoundException(`Post with slug '${param.slug}' not found`);
     }
 
-    await this.redisCacheService.set(cacheKey, post);
+    await this.redisCacheService.set(cacheKey, result.post);
 
-    return post;
+    return result.post;
   }
 }

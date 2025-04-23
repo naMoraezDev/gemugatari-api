@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PostData } from './interfaces/post-data.interface';
 import { DefaultParamDto } from '../../common/dtos/default-param.dto';
 import { httpClientFactory } from 'src/utils/http/http-client.factory';
+import { normalizeGraphQLData } from 'src/utils/graphql/normalize-data';
 import { WordPressPostResponse } from './interfaces/wp-post-response.interface';
 import { GetPostsByCategoryQueryDto } from './dtos/get-posts-by-category-query.dto';
 
@@ -13,6 +14,8 @@ export class WordpressService {
   private readonly wpClientSecret: string;
   private readonly wpAdminUsername: string;
   private readonly wpAdminPassword: string;
+
+  private readonly wpBaseUrl: string;
 
   private tokenExpiry: Date | null = null;
   private isAuthenticated: boolean = false;
@@ -26,124 +29,402 @@ export class WordpressService {
     this.wpClientSecret = process.env.WP_CLIENT_SECRET || '';
     this.wpAdminUsername = process.env.WP_ADMIN_USERNAME || '';
     this.wpAdminPassword = process.env.WP_ADMIN_PASSWORD || '';
+
+    this.wpBaseUrl = process.env.WP_BASE_URL || '';
   }
 
   async getCategories() {
-    const url = `${this.wpApiBaseUrl}/categories`;
+    const url = `${this.wpBaseUrl}/graphql`;
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        query: `
+          {
+            categories {
+              edges {
+                node {
+                  count
+                  id
+                  name
+                  slug
+                  parentId
+                  uri
+                }
+              }
+            }
+          }
+        `,
+      }),
     };
 
-    return await httpClientFactory().request({
+    const result = await httpClientFactory().request({
       input: url,
       init: options,
     });
+
+    return normalizeGraphQLData(result.data);
   }
 
   async getCategoryBySlug(param: DefaultParamDto) {
-    const url = `${this.wpApiBaseUrl}/categories/slug:${param.slug}`;
+    const url = `${this.wpBaseUrl}/graphql`;
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        query: `
+          {
+            category (id: "${param.slug}", idType: SLUG) {
+              count
+              id
+              slug
+              name
+              description
+              parentId
+              uri
+              template {
+                customTemplate
+                cover {
+                  node {
+                    altText
+                    sourceUrl
+                    sizes
+                  }
+                }
+                highlights {
+                  nodes {
+                    id
+                    slug
+                  }
+                }
+              }
+            }
+          }
+        `,
+      }),
     };
 
-    return await httpClientFactory().request({
+    const result = await httpClientFactory().request({
       input: url,
       init: options,
     });
+
+    return normalizeGraphQLData(result.data);
   }
 
   async getPostsByCategory(
     param: DefaultParamDto,
     query: GetPostsByCategoryQueryDto,
   ) {
-    const url = `${this.wpApiBaseUrl}/posts?category=${param.slug}${query.page ? `&page=${query.page}` : ''}${query.limit ? `&number=${query.limit}` : ''}`;
+    const url = `${this.wpBaseUrl}/graphql`;
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        query: `
+          {
+            posts (where: { categoryName: "${param.slug}" } ${query.first ? `first: ${query.first}` : ''} ${query.last ? `last: ${query.last}` : ''} ${query.after ? `after: "${query.after}"` : ''} ${query.before ? `before: "${query.before}"` : ''}) {
+              nodes {
+                id
+                slug
+                title
+                excerpt
+                date
+                modified
+                uri
+                featuredImage {
+                  node {
+                    altText
+                    sourceUrl
+                    caption
+                    sizes
+                  }
+                }
+                categories {
+                  nodes {
+                    id
+                    slug
+                    name
+                    uri
+                  }
+                }
+                tags {
+                  nodes {
+                    id
+                    slug
+                    name
+                    extraFields {
+                      icon {
+                        node {
+                          altText
+                          sourceUrl
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+            }
+          }
+        `,
+      }),
     };
 
-    return await httpClientFactory().request({
+    const result = await httpClientFactory().request({
       input: url,
       init: options,
     });
+
+    return {
+      ...normalizeGraphQLData(result.data),
+      pageInfo: result.data.posts.pageInfo,
+    };
   }
 
   async getPostsByTag(
     param: DefaultParamDto,
     query: GetPostsByCategoryQueryDto,
   ) {
-    const url = `${this.wpApiBaseUrl}/posts?tag=${param.slug}${query.page ? `&page=${query.page}` : ''}${query.limit ? `&number=${query.limit}` : ''}`;
+    const url = `${this.wpBaseUrl}/graphql`;
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        query: `
+          {
+            posts (where: { tag: "${param.slug}" } ${query.first ? `first: ${query.first}` : ''} ${query.last ? `last: ${query.last}` : ''} ${query.after ? `after: "${query.after}"` : ''} ${query.before ? `before: "${query.before}"` : ''}) {
+              nodes {
+                id
+                slug
+                title
+                excerpt
+                date
+                modified
+                uri
+                featuredImage {
+                  node {
+                    altText
+                    sourceUrl
+                    caption
+                    sizes
+                  }
+                }
+                categories {
+                  nodes {
+                    id
+                    slug
+                    name
+                    uri
+                  }
+                }
+                tags {
+                  nodes {
+                    id
+                    slug
+                    name
+                    extraFields {
+                      icon {
+                        node {
+                          altText
+                          sourceUrl
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+            }
+          }
+        `,
+      }),
     };
 
-    return await httpClientFactory().request({
+    const result = await httpClientFactory().request({
       input: url,
       init: options,
     });
+
+    return {
+      ...normalizeGraphQLData(result.data),
+      pageInfo: result.data.posts.pageInfo,
+    };
   }
 
   async getPostBySlug(param: DefaultParamDto) {
-    const url = `${this.wpApiBaseUrl}/posts/slug:${param.slug}`;
+    const url = `${this.wpBaseUrl}/graphql`;
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        query: `
+          {
+            post (id: "${param.slug}", idType: SLUG) {
+              id
+              slug
+              featuredImage {
+                node {
+                  altText
+                  sourceUrl
+                  sizes
+                  caption
+                }
+              }
+              title
+              excerpt
+              date
+              modified
+              content
+              author {
+                node {
+                  name
+                  email
+                  avatar {
+                    url
+                  }
+                }
+              }
+              categories {
+                nodes {
+                  id
+                  slug
+                  name
+                  uri
+                }
+              }
+              tags {
+                nodes {
+                  id
+                  slug
+                  name
+                  extraFields {
+                    icon {
+                      node {
+                        altText
+                        sourceUrl
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `,
+      }),
     };
 
-    return await httpClientFactory().request({
+    const result = await httpClientFactory().request({
       input: url,
       init: options,
     });
+
+    return normalizeGraphQLData(result.data);
   }
 
   async getTags() {
-    const url = `${this.wpApiBaseUrl}/tags`;
+    const url = `${this.wpBaseUrl}/graphql`;
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        query: `
+          {
+            tags {
+              nodes {
+                count
+                id
+                slug
+                name
+                extraFields {
+                  icon {
+                    node {
+                      altText
+                      sourceUrl
+                      sizes
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `,
+      }),
     };
 
-    return await httpClientFactory().request({
+    const result = await httpClientFactory().request({
       input: url,
       init: options,
     });
+
+    return normalizeGraphQLData(result.data);
   }
 
   async getTagBySlug(param: DefaultParamDto) {
-    const url = `${this.wpApiBaseUrl}/tags/slug:${param.slug}`;
+    const url = `${this.wpBaseUrl}/graphql`;
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        query: `
+          {
+            tag (id: "${param.slug}", idType: SLUG) {
+              count
+              id
+              slug
+              name
+              extraFields {
+                icon {
+                  node {
+                    altText
+                    sourceUrl
+                    sizes
+                  }
+                }
+              }
+            }
+          }
+        `,
+      }),
     };
 
-    return await httpClientFactory().request({
+    const result = await httpClientFactory().request({
       input: url,
       init: options,
     });
+
+    return normalizeGraphQLData(result.data);
   }
 
   async createDraftPost(postData: PostData) {

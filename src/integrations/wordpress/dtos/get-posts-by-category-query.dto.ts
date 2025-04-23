@@ -1,11 +1,19 @@
-import { IsNumberString, IsOptional } from 'class-validator';
+import { IsNumberString, IsOptional, IsString } from 'class-validator';
 
 export class GetPostsByCategoryQueryDto {
   @IsOptional()
   @IsNumberString()
-  page?: string;
+  first?: string;
 
   @IsOptional()
   @IsNumberString()
-  limit?: string;
+  last?: string;
+
+  @IsString()
+  @IsOptional()
+  after?: string;
+
+  @IsString()
+  @IsOptional()
+  before?: string;
 }

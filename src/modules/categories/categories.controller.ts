@@ -53,11 +53,11 @@ export class CategoriesController {
       return ApiResponseDto.success(cached, { cached: true });
     }
 
-    const categories = await this.categoriesService.getCategories();
+    const result = await this.categoriesService.getCategories();
 
-    await this.redisCacheService.set(cacheKey, categories);
+    await this.redisCacheService.set(cacheKey, result.categories);
 
-    return categories;
+    return result.categories;
   }
 
   @Get(':slug')
@@ -93,16 +93,16 @@ export class CategoriesController {
       return ApiResponseDto.success(cached, { cached: true });
     }
 
-    const category = await this.categoriesService.getCategoryBySlug(param);
+    const result = await this.categoriesService.getCategoryBySlug(param);
 
-    if (!category) {
+    if (!result.category) {
       throw new NotFoundException(
         `Category with slug '${param.slug}' not found`,
       );
     }
 
-    await this.redisCacheService.set(cacheKey, category);
+    await this.redisCacheService.set(cacheKey, result.category);
 
-    return category;
+    return result.category;
   }
 }

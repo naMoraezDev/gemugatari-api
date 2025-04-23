@@ -50,11 +50,11 @@ export class TagsController {
       return ApiResponseDto.success(cached, { cached: true });
     }
 
-    const tags = await this.tagsService.getTags();
+    const result = await this.tagsService.getTags();
 
-    await this.redisCacheService.set(cacheKey, tags);
+    await this.redisCacheService.set(cacheKey, result.tags);
 
-    return tags;
+    return result.tags;
   }
 
   @Get(':slug')
@@ -90,14 +90,14 @@ export class TagsController {
       return ApiResponseDto.success(cached, { cached: true });
     }
 
-    const tag = await this.tagsService.getTagBySlug(param);
+    const result = await this.tagsService.getTagBySlug(param);
 
-    if (!tag) {
+    if (!result.tag) {
       throw new NotFoundException(`Tag with slug '${param.slug}' not found`);
     }
 
-    await this.redisCacheService.set(cacheKey, tag);
+    await this.redisCacheService.set(cacheKey, result.tag);
 
-    return tag;
+    return result.tag;
   }
 }
