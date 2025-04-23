@@ -1,26 +1,47 @@
+export interface Guid {
+  rendered: string;
+  raw: string;
+}
+
+export interface Title {
+  raw: string;
+  rendered: string;
+}
+
+export interface Content {
+  raw: string;
+  rendered: string;
+  protected: boolean;
+  block_version: number;
+}
+
+export interface Excerpt {
+  raw: string;
+  rendered: string;
+  protected: boolean;
+}
+
 export interface WordPressPostResponse {
-  ID: number;
-  site_ID: number;
-  author: {
-    ID: number;
-    login: string;
-    name: string;
-    URL: string;
-  };
+  id: number;
   date: string;
+  date_gmt: string;
+  guid: Guid;
   modified: string;
-  title: string;
-  URL: string;
-  short_URL: string;
-  content: string;
-  excerpt: string;
+  modified_gmt: string;
+  password: string;
   slug: string;
   status: string;
+  type: string;
+  link: string;
+  title: Title;
+  content: Content;
+  excerpt: Excerpt;
+  author: number;
+  featured_media: number;
+  comment_status: string;
+  ping_status: string;
   sticky: boolean;
-  categories: Record<string, string>;
-  tags: Record<string, string>;
-  featured_image: string;
+  template: string;
   format: string;
-  edit_link: string;
-  [key: string]: any;
+  meta: Record<string, any>;
 }

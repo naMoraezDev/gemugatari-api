@@ -29,7 +29,7 @@ export class ContentService {
 
       return {
         source_url: articleUrl,
-        created_post_url: result.URL,
+        created_post_url: result.guid.raw,
       };
     } catch (error) {
       throw new InternalServerErrorException(
@@ -92,7 +92,7 @@ export class ContentService {
 
       return {
         topic,
-        created_post_url: result.URL,
+        created_post_url: result.guid.raw,
       };
     } catch (error) {
       throw new InternalServerErrorException(
