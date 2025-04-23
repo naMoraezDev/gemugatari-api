@@ -7,7 +7,6 @@ import { HealthModule } from './modules/health/health.module';
 import { TwitchModule } from './modules/twitch/twitch.module';
 import { YoutubeModule } from './modules/youtube/youtube.module';
 import { MatchesModule } from './modules/matches/matches.module';
-import { ContentModule } from './modules/content/content.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TournamentsModule } from './modules/tournaments/tournaments.module';
 import { UserProfileModule } from './modules/user-profile/user-profile.module';
@@ -26,7 +25,6 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
     TwitchModule,
     YoutubeModule,
     MatchesModule,
-    ContentModule,
     CategoriesModule,
     TournamentsModule,
     UserProfileModule,

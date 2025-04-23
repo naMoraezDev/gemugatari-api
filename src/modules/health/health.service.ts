@@ -69,8 +69,6 @@ export class HealthService {
   private checkEnvironmentVars(healthStatus: HealthStatus): void {
     const requiredEnvVars = [
       'WP_BASE_URL',
-      'WP_ADMIN_USERNAME',
-      'WP_ADMIN_PASSWORD',
       'PANDASCORE_API_BASE_URL',
       'PANDASCORE_API_KEY',
       'GOOGLE_API_KEY',
@@ -79,7 +77,6 @@ export class HealthService {
       'TWITCH_CLIENT_SECRET',
       'TWITCH_AUTH_API_URL',
       'TWITCH_API_URL',
-      'GEMINI_API_KEY',
       'REDIS_CONNECT_URL',
       'API_KEYS',
       'FIREBASE_PROJECT_ID',

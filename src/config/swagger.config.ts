@@ -6,7 +6,7 @@ export function setupSwagger(app: INestApplication): void {
   const options = new DocumentBuilder()
     .setTitle('ggatari API')
     .setDescription(
-      'API integrating WordPress, Pandascore (e-sports), YouTube, Twitch and Gemini (content generation), with user management via Firebase/Firestore and Redis for caching.',
+      'This Backend for Frontend (BFF) API centralizes integration with services like WordPress (via WPGraphQL), PandaScore, YouTube, and Twitch, providing a unified data layer for the frontend. User authentication is handled via Firebase Auth, while Firestore manages custom user profiles. To enhance performance, data responses are cached using Redis, reducing external API calls and improving user experience.',
     )
     .setVersion('1.0')
     .addBearerAuth(
@@ -42,14 +42,12 @@ export function setupSwagger(app: INestApplication): void {
     { name: 'tournaments' },
     { name: 'youtube' },
     { name: 'twitch' },
-    { name: 'content' },
     { name: 'user profile' },
   ];
 
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
-      defaultModelsExpandDepth: 0,
     },
     customJs: [
       'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
