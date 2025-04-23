@@ -1,12 +1,12 @@
-# Etapa de build
 FROM node:20-slim AS builder
 
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --omit=dev
+
+RUN npm ci
 
 COPY . .
 RUN npm run build
