@@ -53,10 +53,7 @@ export class HealthService {
 
   private checkEnvironmentVars(healthStatus: HealthStatus): void {
     const requiredEnvVars = [
-      'WP_API_BASE_URL',
-      'WP_TOKEN_URL',
-      'WP_CLIENT_ID',
-      'WP_CLIENT_SECRET',
+      'WP_BASE_URL',
       'WP_ADMIN_USERNAME',
       'WP_ADMIN_PASSWORD',
       'PANDASCORE_API_BASE_URL',
@@ -70,6 +67,9 @@ export class HealthService {
       'GEMINI_API_KEY',
       'REDIS_CONNECT_URL',
       'API_KEYS',
+      'FIREBASE_PROJECT_ID',
+      'FIREBASE_CLIENT_EMAIL',
+      'FIREBASE_PRIVATE_KEY',
     ];
 
     const missingEnvVars = checkEnvironmentVariables(requiredEnvVars);
