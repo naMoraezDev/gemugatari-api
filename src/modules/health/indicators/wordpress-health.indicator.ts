@@ -16,7 +16,7 @@ export class WordpressHealthIndicator extends HealthIndicatorService {
 
       const startTime = Date.now();
 
-      const url = `${process.env.WP_BASE_URL || ''}/graphql`;
+      const url = `${process.env.WP_BASE_URL || ''}/wp-json/custom/v1/health`;
       const options = {
         method: 'GET',
         signal: controller.signal,
