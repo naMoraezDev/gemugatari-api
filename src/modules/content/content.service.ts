@@ -128,7 +128,7 @@ export class ContentService {
       await page.setViewport({ width: 1366, height: 768 });
 
       await page.goto(siteUrl, {
-        timeout: 30000,
+        timeout: 60000,
         waitUntil: 'networkidle2',
       });
 
@@ -343,7 +343,7 @@ export class ContentService {
       await page.setViewport({ width: 1366, height: 768 });
 
       await page.goto(articleUrl, {
-        timeout: 30000,
+        timeout: 60000,
         waitUntil: 'networkidle2',
       });
 
