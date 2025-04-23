@@ -7,12 +7,20 @@ import {
 } from 'src/common/utils/health-helpers';
 import { Injectable, Logger } from '@nestjs/common';
 import { RedisHealthIndicator } from './indicators/redis-health.indicator';
+import { FirebaseHealthIndicator } from './indicators/firebase-health.indicator';
+import { WordpressHealthIndicator } from './indicators/wordpress-health.indicator';
+import { PandascoreHealthIndicator } from './indicators/pandascore-health.indicator';
 
 @Injectable()
 export class HealthService {
   private readonly logger = new Logger(HealthService.name);
 
-  constructor(private readonly redis: RedisHealthIndicator) {}
+  constructor(
+    private readonly redis: RedisHealthIndicator,
+    private readonly firebase: FirebaseHealthIndicator,
+    private readonly wordpress: WordpressHealthIndicator,
+    private readonly pandascore: PandascoreHealthIndicator,
+  ) {}
 
   async checkLiveness(): Promise<Partial<HealthStatus>> {
     return {
@@ -28,15 +36,22 @@ export class HealthService {
       const healthStatus: HealthStatus = {
         status: 'ok',
         timestamp: new Date().toISOString(),
-        uptime: `${Math.floor(process.uptime() / 60)} minutes`,
+        uptime: `${Math.floor(process.uptime() / 60)} min`,
         checks: {},
       };
 
-      const [redisResult] = await Promise.allSettled([
-        checkWithTimeout(() => this.redis.isHealthy('redis')),
-      ]);
+      const [redisResult, firebaseResult, wordpressResult, pandascoreResult] =
+        await Promise.allSettled([
+          checkWithTimeout(() => this.redis.isHealthy('redis')),
+          checkWithTimeout(() => this.firebase.isHealthy('firebase')),
+          checkWithTimeout(() => this.wordpress.isHealthy('wordpress')),
+          checkWithTimeout(() => this.pandascore.isHealthy('pandascore')),
+        ]);
 
       this.processRedisCheck(healthStatus, redisResult);
+      this.processFirebaseCheck(healthStatus, firebaseResult);
+      this.processWordpressCheck(healthStatus, wordpressResult);
+      this.processPandascoreApiCheck(healthStatus, pandascoreResult);
 
       this.checkEnvironmentVars(healthStatus);
 
@@ -139,11 +154,105 @@ export class HealthService {
     }
   }
 
+  private processFirebaseCheck(
+    healthStatus: HealthStatus,
+    result: PromiseSettledResult<any>,
+  ): void {
+    if (result.status === 'fulfilled') {
+      healthStatus.checks.firebase = {
+        status: result.value.firebase.status === 'up' ? 'ok' : 'error',
+        initialized: result.value.firebase.status === 'up',
+        projectId: process.env.FIREBASE_PROJECT_ID || '',
+        message:
+          result.value.firebase.status === 'up'
+            ? 'Firebase connection established'
+            : undefined,
+        error:
+          result.value.firebase.status !== 'up'
+            ? result.value.firebase.message ||
+              'Communication with Firebase failed'
+            : undefined,
+      };
+
+      if (result.value.firebase.status !== 'up') {
+        healthStatus.status = 'degraded';
+      }
+    } else {
+      healthStatus.checks.firebase = {
+        status: 'error',
+        initialized: false,
+        projectId: process.env.FIREBASE_PROJECT_ID || '',
+        error: `Firebase verification failed: ${result.reason?.message || 'Unknown error'}`,
+      };
+      healthStatus.status = 'degraded';
+    }
+  }
+
+  private processWordpressCheck(
+    healthStatus: HealthStatus,
+    result: PromiseSettledResult<any>,
+  ): void {
+    if (result.status === 'fulfilled') {
+      healthStatus.checks.wordpress = {
+        status: result.value.wordpress.status === 'up' ? 'ok' : 'error',
+        message:
+          result.value.wordpress.status === 'up'
+            ? 'Wordpress connection established'
+            : undefined,
+        error:
+          result.value.wordpress.status !== 'up'
+            ? result.value.wordpress.message ||
+              'Failure in communication with Wordpress'
+            : undefined,
+      };
+
+      if (result.value.wordpress.status !== 'up') {
+        healthStatus.status = 'degraded';
+      }
+    } else {
+      healthStatus.checks.wordpress = {
+        status: 'error',
+        error: `Failed to verify Wordpress: ${result.reason?.message || 'Unknown error'}`,
+      };
+      healthStatus.status = 'degraded';
+    }
+  }
+
+  private processPandascoreApiCheck(
+    healthStatus: HealthStatus,
+    result: PromiseSettledResult<any>,
+  ): void {
+    if (result.status === 'fulfilled') {
+      healthStatus.checks.pandascore = {
+        status: result.value.pandascore.status === 'up' ? 'ok' : 'error',
+        message:
+          result.value.pandascore.status === 'up'
+            ? 'Pandascore API connection established'
+            : undefined,
+        error:
+          result.value.pandascore.status !== 'up'
+            ? result.value.pandascore.message ||
+              'Failure in communication with Pandascore API'
+            : undefined,
+      };
+
+      if (result.value.pandascore.status !== 'up') {
+        healthStatus.status = 'degraded';
+      }
+    } else {
+      healthStatus.checks.pandascore = {
+        status: 'error',
+        error: `Failed to verify Pandascore API: ${result.reason?.message || 'Unknown error'}`,
+      };
+      healthStatus.status = 'degraded';
+    }
+  }
+
   private createErrorResponse(): HealthStatus {
     return {
       status: 'error',
       timestamp: new Date().toISOString(),
-      uptime: `${Math.floor(process.uptime() / 60)} minutes`,
+      uptime: `${Math.floor(process.uptime() / 60)} min`,
       checks: {},
       service: {
         name: 'gg-api',

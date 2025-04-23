@@ -10,7 +10,7 @@ export class GeminiService {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      throw new Error('GEMINI_API_KEY não encontrada no .env');
+      throw new Error('GEMINI_API_KEY not found in .env');
     }
 
     this.modelName = 'gemini-2.0-flash';
