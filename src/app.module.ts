@@ -25,7 +25,7 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
       throttlers: [
         {
           ttl: 60000,
-          limit: 10,
+          limit: 60,
         },
       ],
     }),
