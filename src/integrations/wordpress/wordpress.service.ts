@@ -4,6 +4,7 @@ import { DefaultParamDto } from '../../common/dtos/default-param.dto';
 import { httpClientFactory } from 'src/utils/http/http-client.factory';
 import { normalizeGraphQLData } from 'src/utils/graphql/normalize-data';
 import { WordPressPostResponse } from './interfaces/wp-post-response.interface';
+import { GetPostsBySearchQueryDto } from './dtos/get-posts-by-search-query.dto';
 import { GetPostsByCategoryQueryDto } from './dtos/get-posts-by-category-query.dto';
 
 @Injectable()
@@ -196,6 +197,81 @@ export class WordpressService {
         query: `
           {
             posts (where: { tag: "${param.slug}" } ${query.first ? `first: ${query.first}` : ''} ${query.last ? `last: ${query.last}` : ''} ${query.after ? `after: "${query.after}"` : ''} ${query.before ? `before: "${query.before}"` : ''}) {
+              nodes {
+                id
+                slug
+                title
+                excerpt
+                date
+                modified
+                uri
+                featuredImage {
+                  node {
+                    altText
+                    sourceUrl
+                    caption
+                    sizes
+                  }
+                }
+                categories {
+                  nodes {
+                    id
+                    slug
+                    name
+                    uri
+                  }
+                }
+                tags {
+                  nodes {
+                    id
+                    slug
+                    name
+                    extraFields {
+                      icon {
+                        node {
+                          altText
+                          sourceUrl
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+            }
+          }
+        `,
+      }),
+    };
+
+    const result = await httpClientFactory().request({
+      input: url,
+      init: options,
+    });
+
+    return {
+      ...normalizeGraphQLData(result.data),
+      pageInfo: result.data.posts.pageInfo,
+    };
+  }
+
+  async getPostsBySearch(query: GetPostsBySearchQueryDto) {
+    const url = `${this.wpBaseUrl}/graphql`;
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          {
+            posts (where: { search: "${query.term}" } ${query.first ? `first: ${query.first}` : ''} ${query.last ? `last: ${query.last}` : ''} ${query.after ? `after: "${query.after}"` : ''} ${query.before ? `before: "${query.before}"` : ''}) {
               nodes {
                 id
                 slug

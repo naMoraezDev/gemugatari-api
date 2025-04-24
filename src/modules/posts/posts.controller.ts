@@ -25,6 +25,7 @@ import { ApiKeyAuth } from 'src/common/decorators/api-key.decorator';
 import { PostDto, PostsResponseDto } from './dtos/posts-response.dto';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
+import { GetPostsBySearchQueryDto } from 'src/integrations/wordpress/dtos/get-posts-by-search-query.dto';
 import { GetPostsByCategoryQueryDto } from 'src/integrations/wordpress/dtos/get-posts-by-category-query.dto';
 
 @ApiTags('posts')
@@ -41,7 +42,7 @@ export class PostsController {
   @ApiOperation({
     summary: 'Retrieve posts by category',
     description:
-      'Fetches a paginated list of posts belonging to a specific category identified by its slug. This endpoint requires API key authentication. Results can be paginated using optional page and limit parameters. The response includes post summaries suitable for listing views. Results are cached in Redis for improved performance on subsequent identical requests.',
+      'Fetches a paginated list of posts belonging to a specific category identified by its slug. This endpoint requires API key authentication. The response includes post summaries suitable for listing views. Results are cached in Redis for improved performance on subsequent identical requests.',
   })
   @ApiParam({
     type: String,
@@ -98,7 +99,7 @@ export class PostsController {
   @ApiOperation({
     summary: 'Retrieve posts by tag',
     description:
-      'Fetches a paginated list of posts associated with a specific tag identified by its slug. This endpoint requires API key authentication. Results can be paginated using optional page and limit parameters. The response includes post summaries suitable for tag-based content filtering. Results are cached in Redis for improved performance on subsequent identical requests.',
+      'Fetches a paginated list of posts associated with a specific tag identified by its slug. This endpoint requires API key authentication. The response includes post summaries suitable for tag-based content filtering. Results are cached in Redis for improved performance on subsequent identical requests.',
   })
   @ApiParam({
     type: String,
@@ -147,6 +148,62 @@ export class PostsController {
     const result = await this.postsService.getPostsByTag(param, query);
 
     await this.redisCacheService.set(cacheKey, result);
+
+    return result;
+  }
+
+  @Get('search')
+  @ApiOperation({
+    summary: 'Retrieve posts by search term',
+    description:
+      'Fetches a paginated list of posts associated with a search term. This endpoint requires API key authentication. The response includes post summaries suitable for tag-based content filtering. Results are cached in Redis for improved performance on subsequent identical requests.',
+  })
+  @ApiQuery({
+    type: String,
+    name: 'term',
+    required: true,
+  })
+  @ApiQuery({
+    type: String,
+    name: 'first',
+    required: false,
+  })
+  @ApiQuery({
+    type: String,
+    name: 'last',
+    required: false,
+  })
+  @ApiQuery({
+    type: String,
+    name: 'after',
+    required: false,
+  })
+  @ApiQuery({
+    type: String,
+    name: 'before',
+    required: false,
+  })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponseDecorator({ type: PostsResponseDto })
+  @ApiResponse({
+    description: 'Service Unavailable',
+    status: HttpStatus.SERVICE_UNAVAILABLE,
+  })
+  async getPostsBySearch(
+    @Req() request: Request,
+    @Query() query: GetPostsBySearchQueryDto,
+  ) {
+    const cacheKey = `posts:search:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+
+    const cached = await this.redisCacheService.get(cacheKey);
+
+    if (cached) {
+      return ApiResponseDto.success(cached, { cached: true });
+    }
+
+    const result = await this.postsService.getPostsBySearch(query);
+
+    await this.redisCacheService.set(cacheKey, result, 60);
 
     return result;
   }
