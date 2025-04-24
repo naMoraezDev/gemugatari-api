@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TagsModule } from './modules/tags/tags.module';
 import { PostsModule } from './modules/posts/posts.module';
+import { CacheModule } from './modules/cache/cache.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HealthModule } from './modules/health/health.module';
 import { TwitchModule } from './modules/twitch/twitch.module';
@@ -21,6 +22,7 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
     }),
     TagsModule,
     PostsModule,
+    CacheModule,
     HealthModule,
     TwitchModule,
     YoutubeModule,

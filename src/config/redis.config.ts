@@ -1,11 +1,11 @@
 import { Logger } from '@nestjs/common';
-import { createClient, RedisClientType, RedisClusterType } from 'redis';
+import { createClient, RedisClientType } from 'redis';
 
 const logger = new Logger('RedisConfig');
 
 let isConnected = false;
 let isConnecting = false;
-let redisClient: RedisClientType | RedisClusterType;
+let redisClient: RedisClientType;
 let connectionTimeout: NodeJS.Timeout | null = null;
 
 let connectionAttempts = 0;
@@ -46,7 +46,7 @@ function calculateBackoff(attempts: number): number {
   return delay + Math.random() * 1000;
 }
 
-async function connectRedis(): Promise<RedisClientType | RedisClusterType> {
+async function connectRedis(): Promise<RedisClientType> {
   if (isConnected) {
     return redisClient;
   }
@@ -123,7 +123,7 @@ async function connectRedis(): Promise<RedisClientType | RedisClusterType> {
       connectionAttempts = 0;
     });
 
-    const connectionPromise = new Promise<RedisClientType | RedisClusterType>(
+    const connectionPromise = new Promise<RedisClientType>(
       (resolve, reject) => {
         if (connectionTimeout) {
           clearTimeout(connectionTimeout);
@@ -178,7 +178,7 @@ async function connectRedis(): Promise<RedisClientType | RedisClusterType> {
   }
 }
 
-function getRedisClient(): RedisClientType | RedisClusterType {
+function getRedisClient(): RedisClientType {
   if (!isConnected) {
     logger.warn('Attempt to use Redis client that is not connected');
     throw new Error(

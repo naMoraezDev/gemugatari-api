@@ -43,6 +43,7 @@ export function setupSwagger(app: INestApplication): void {
     { name: 'youtube' },
     { name: 'twitch' },
     { name: 'user profile' },
+    { name: 'cache' },
   ];
 
   SwaggerModule.setup('docs', app, document, {

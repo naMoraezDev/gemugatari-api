@@ -299,4 +299,23 @@ export class RedisCacheService implements OnModuleInit, OnModuleDestroy {
       permanentlyDisabled: this.cachePermanentlyDisabled,
     };
   }
+
+  public async flushAll(): Promise<boolean> {
+    if (!this.isAvailable()) {
+      this.logger.warn('Cannot flush cache: Redis is not available.');
+      return false;
+    }
+
+    try {
+      const redisClient = getRedisClient();
+      await redisClient.flushAll();
+      this.logger.log('Redis cache flushed (FLUSHALL)');
+      return true;
+    } catch (error) {
+      this.logger.error(`Error flushing Redis cache: ${error.message}`);
+      this.cacheAvailable = false;
+      this.scheduleReconnect();
+      return false;
+    }
+  }
 }
