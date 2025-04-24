@@ -7,6 +7,7 @@ import {
   HttpCode,
   Controller,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,9 +17,13 @@ import {
   ApiOperation,
 } from '@nestjs/swagger';
 import { CacheService } from './cache.service';
+import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
+import { ApiKeyAuth } from 'src/common/decorators/api-key.decorator';
 
 @ApiTags('cache')
 @Controller('cache')
+@UseGuards(ApiKeyGuard)
+@ApiKeyAuth()
 export class CacheController {
   constructor(private readonly cacheService: CacheService) {}
 
