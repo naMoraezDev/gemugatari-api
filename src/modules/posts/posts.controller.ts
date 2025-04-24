@@ -79,7 +79,7 @@ export class PostsController {
     @Param() param: DefaultParamDto,
     @Query() query: GetPostsByCategoryQueryDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `posts:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -136,7 +136,7 @@ export class PostsController {
     @Param() param: DefaultParamDto,
     @Query() query: GetPostsByCategoryQueryDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `posts:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -176,7 +176,7 @@ export class PostsController {
     @Req() request: Request,
     @Param() param: DefaultParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `post:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 

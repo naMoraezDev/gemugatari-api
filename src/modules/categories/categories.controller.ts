@@ -45,7 +45,7 @@ export class CategoriesController {
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getCategories(@Req() request: Request) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `categories:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -85,7 +85,7 @@ export class CategoriesController {
     @Req() request: Request,
     @Param() param: DefaultParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `category:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 

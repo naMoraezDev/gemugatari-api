@@ -71,7 +71,7 @@ export class VideosController {
     @Param() param: VideosParamDto,
     @Query() query: VideosQueryDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `youtube:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -120,7 +120,7 @@ export class VideosController {
     @Req() request: Request,
     @Param() param: VideosParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `youtube:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 

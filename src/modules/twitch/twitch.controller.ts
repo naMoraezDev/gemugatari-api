@@ -54,7 +54,7 @@ export class TwitchController {
     @Req() request: Request,
     @Param() param: GetTwitchUserDataParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `twitch:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 

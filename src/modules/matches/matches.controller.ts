@@ -65,7 +65,7 @@ export class MatchesController {
     @Req() request: Request,
     @Query() query: GetMatchesQueryDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `matches:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -102,7 +102,7 @@ export class MatchesController {
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getMatch(@Req() request: Request, @Param() param: DefaultParamDto) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `match:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -146,7 +146,7 @@ export class MatchesController {
     @Req() request: Request,
     @Param() param: DefaultParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `match:opponents:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 

@@ -66,7 +66,7 @@ export class TournamentsController {
     @Req() request: Request,
     @Query() query: GetTournamentsQueryDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `tournaments:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -106,7 +106,7 @@ export class TournamentsController {
     @Req() request: Request,
     @Param() param: DefaultParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `tournament:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -152,7 +152,7 @@ export class TournamentsController {
     @Req() request: Request,
     @Param() param: DefaultParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `tournament:brackets:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -199,7 +199,7 @@ export class TournamentsController {
     @Req() request: Request,
     @Param() param: DefaultParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `tournament:standings:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -246,7 +246,7 @@ export class TournamentsController {
     @Req() request: Request,
     @Param() param: DefaultParamDto,
   ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = `tournament:rosters:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 

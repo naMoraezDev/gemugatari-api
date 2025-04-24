@@ -41,8 +41,8 @@ export class TagsController {
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getCategories(@Req() request: Request) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getTags(@Req() request: Request) {
+    const cacheKey = `tags:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -78,11 +78,8 @@ export class TagsController {
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getCategoryBySlug(
-    @Req() request: Request,
-    @Param() param: DefaultParamDto,
-  ) {
-    const cacheKey = `${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getTagBySlug(@Req() request: Request, @Param() param: DefaultParamDto) {
+    const cacheKey = `tag:${request.protocol}://${request.get('host')}${request.originalUrl}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
