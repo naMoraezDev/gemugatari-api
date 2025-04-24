@@ -3,11 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { TagsModule } from './modules/tags/tags.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { CacheModule } from './modules/cache/cache.module';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HealthModule } from './modules/health/health.module';
 import { TwitchModule } from './modules/twitch/twitch.module';
 import { YoutubeModule } from './modules/youtube/youtube.module';
 import { MatchesModule } from './modules/matches/matches.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TournamentsModule } from './modules/tournaments/tournaments.module';
 import { UserProfileModule } from './modules/user-profile/user-profile.module';
@@ -19,6 +20,14 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
     }),
     TagsModule,
     PostsModule,
@@ -32,6 +41,10 @@ import { ApiResponseInterceptor } from './common/interceptors/api-response.inter
     UserProfileModule,
   ],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: ApiResponseInterceptor,
