@@ -51,22 +51,12 @@ export class PostsController {
   })
   @ApiQuery({
     type: String,
-    name: 'first',
+    name: 'size',
     required: false,
   })
   @ApiQuery({
     type: String,
-    name: 'last',
-    required: false,
-  })
-  @ApiQuery({
-    type: String,
-    name: 'after',
-    required: false,
-  })
-  @ApiQuery({
-    type: String,
-    name: 'before',
+    name: 'offset',
     required: false,
   })
   @HttpCode(HttpStatus.OK)
@@ -108,22 +98,12 @@ export class PostsController {
   })
   @ApiQuery({
     type: String,
-    name: 'first',
+    name: 'size',
     required: false,
   })
   @ApiQuery({
     type: String,
-    name: 'last',
-    required: false,
-  })
-  @ApiQuery({
-    type: String,
-    name: 'after',
-    required: false,
-  })
-  @ApiQuery({
-    type: String,
-    name: 'before',
+    name: 'offset',
     required: false,
   })
   @HttpCode(HttpStatus.OK)
@@ -165,22 +145,12 @@ export class PostsController {
   })
   @ApiQuery({
     type: String,
-    name: 'first',
+    name: 'size',
     required: false,
   })
   @ApiQuery({
     type: String,
-    name: 'last',
-    required: false,
-  })
-  @ApiQuery({
-    type: String,
-    name: 'after',
-    required: false,
-  })
-  @ApiQuery({
-    type: String,
-    name: 'before',
+    name: 'offset',
     required: false,
   })
   @HttpCode(HttpStatus.OK)

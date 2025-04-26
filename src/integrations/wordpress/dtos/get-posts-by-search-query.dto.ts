@@ -12,17 +12,9 @@ export class GetPostsBySearchQueryDto {
 
   @IsOptional()
   @IsNumberString()
-  first?: string;
+  size?: string;
 
   @IsOptional()
   @IsNumberString()
-  last?: string;
-
-  @IsString()
-  @IsOptional()
-  after?: string;
-
-  @IsString()
-  @IsOptional()
-  before?: string;
+  offset?: string;
 }

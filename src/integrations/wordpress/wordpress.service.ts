@@ -118,7 +118,7 @@ export class WordpressService {
       body: JSON.stringify({
         query: `
           {
-            posts (where: { categoryName: "${param.slug}" } ${query.first ? `first: ${query.first}` : ''} ${query.last ? `last: ${query.last}` : ''} ${query.after ? `after: "${query.after}"` : ''} ${query.before ? `before: "${query.before}"` : ''}) {
+            posts (where: { categoryName: "${param.slug}", offsetPagination: { size: ${query.size || 10}, offset: ${query.offset || 0} } }) {
               nodes {
                 id
                 slug
@@ -160,10 +160,11 @@ export class WordpressService {
                 }
               }
               pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
+                  offsetPagination {
+                  hasMore
+                  hasPrevious
+                  total
+                }
               }
             }
           }
@@ -177,8 +178,8 @@ export class WordpressService {
     });
 
     return {
-      ...normalizeGraphQLData(result.data),
       pageInfo: result.data.posts.pageInfo,
+      ...normalizeGraphQLData(result.data),
     };
   }
 
@@ -196,7 +197,7 @@ export class WordpressService {
       body: JSON.stringify({
         query: `
           {
-            posts (where: { tag: "${param.slug}" } ${query.first ? `first: ${query.first}` : ''} ${query.last ? `last: ${query.last}` : ''} ${query.after ? `after: "${query.after}"` : ''} ${query.before ? `before: "${query.before}"` : ''}) {
+            posts (where: { tag: "${param.slug}", offsetPagination: { size: ${query.size || 10}, offset: ${query.offset || 0} } }) {
               nodes {
                 id
                 slug
@@ -238,10 +239,11 @@ export class WordpressService {
                 }
               }
               pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
+                offsetPagination {
+                  hasMore
+                  hasPrevious
+                  total
+                }
               }
             }
           }
@@ -255,8 +257,8 @@ export class WordpressService {
     });
 
     return {
-      ...normalizeGraphQLData(result.data),
       pageInfo: result.data.posts.pageInfo,
+      ...normalizeGraphQLData(result.data),
     };
   }
 
@@ -271,7 +273,7 @@ export class WordpressService {
       body: JSON.stringify({
         query: `
           {
-            posts (where: { search: "${query.term}" } ${query.first ? `first: ${query.first}` : ''} ${query.last ? `last: ${query.last}` : ''} ${query.after ? `after: "${query.after}"` : ''} ${query.before ? `before: "${query.before}"` : ''}) {
+            posts (where: { search: "${query.term}", offsetPagination: { size: ${query.size || 10}, offset: ${query.offset || 0} } }) {
               nodes {
                 id
                 slug
@@ -313,10 +315,11 @@ export class WordpressService {
                 }
               }
               pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
+                offsetPagination {
+                  hasMore
+                  hasPrevious
+                  total
+                }
               }
             }
           }
@@ -330,8 +333,8 @@ export class WordpressService {
     });
 
     return {
-      ...normalizeGraphQLData(result.data),
       pageInfo: result.data.posts.pageInfo,
+      ...normalizeGraphQLData(result.data),
     };
   }
 
