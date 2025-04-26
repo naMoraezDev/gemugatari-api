@@ -70,7 +70,12 @@ export class PostsController {
     @Param() param: DefaultParamDto,
     @Query() query: GetPostsByCategoryQueryDto,
   ) {
-    const cacheKey = `posts:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const url = request.originalUrl || request.url;
+    const queryString = url.includes('?')
+      ? url.substring(url.indexOf('?'))
+      : '';
+
+    const cacheKey = `posts:category:${param.slug}${queryString ? `:${queryString}` : ''}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -117,7 +122,12 @@ export class PostsController {
     @Param() param: DefaultParamDto,
     @Query() query: GetPostsByCategoryQueryDto,
   ) {
-    const cacheKey = `posts:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const url = request.originalUrl || request.url;
+    const queryString = url.includes('?')
+      ? url.substring(url.indexOf('?'))
+      : '';
+
+    const cacheKey = `posts:tag:${param.slug}${queryString ? `:${queryString}` : ''}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -163,7 +173,12 @@ export class PostsController {
     @Req() request: Request,
     @Query() query: GetPostsBySearchQueryDto,
   ) {
-    const cacheKey = `posts:search:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const url = request.originalUrl || request.url;
+    const queryString = url.includes('?')
+      ? url.substring(url.indexOf('?'))
+      : '';
+
+    const cacheKey = `posts:search:${query.term}${queryString ? `:${queryString}` : ''}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -199,11 +214,8 @@ export class PostsController {
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getPostBySlug(
-    @Req() request: Request,
-    @Param() param: DefaultParamDto,
-  ) {
-    const cacheKey = `post:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getPostBySlug(@Param() param: DefaultParamDto) {
+    const cacheKey = `posts:${param.slug}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 

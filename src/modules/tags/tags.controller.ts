@@ -42,7 +42,7 @@ export class TagsController {
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
   async getTags(@Req() request: Request) {
-    const cacheKey = `tags:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+    const cacheKey = 'tags';
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -78,8 +78,8 @@ export class TagsController {
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getTagBySlug(@Req() request: Request, @Param() param: DefaultParamDto) {
-    const cacheKey = `tag:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getTagBySlug(@Param() param: DefaultParamDto) {
+    const cacheKey = `tags:${param.slug}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
