@@ -1,6 +1,5 @@
 import {
   Get,
-  Req,
   Query,
   Param,
   HttpCode,
@@ -16,7 +15,6 @@ import {
   ApiResponse,
   ApiOperation,
 } from '@nestjs/swagger';
-import { Request } from 'express';
 import { BracketDto } from './dtos/bracket.dto';
 import { StandingDto } from './dtos/standing.dto';
 import { TournamentDto } from './dtos/tournament.dto';
@@ -62,11 +60,8 @@ export class TournamentsController {
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getTournaments(
-    @Req() request: Request,
-    @Query() query: GetTournamentsQueryDto,
-  ) {
-    const cacheKey = `tournaments:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getTournaments(@Query() query: GetTournamentsQueryDto) {
+    const cacheKey = 'tournaments';
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -76,7 +71,7 @@ export class TournamentsController {
 
     const tournaments = await this.tournamentsService.getTournaments(query);
 
-    await this.redisCacheService.set(cacheKey, tournaments);
+    await this.redisCacheService.set(cacheKey, tournaments, 3600);
 
     return tournaments;
   }
@@ -102,11 +97,8 @@ export class TournamentsController {
     description: 'Service unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getTournament(
-    @Req() request: Request,
-    @Param() param: DefaultParamDto,
-  ) {
-    const cacheKey = `tournament:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getTournament(@Param() param: DefaultParamDto) {
+    const cacheKey = `tournaments:${param.slug}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -122,7 +114,7 @@ export class TournamentsController {
       );
     }
 
-    await this.redisCacheService.set(cacheKey, tournament);
+    await this.redisCacheService.set(cacheKey, tournament, 3600);
 
     return tournament;
   }
@@ -148,11 +140,8 @@ export class TournamentsController {
     description: 'Service unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getTournamentBrackets(
-    @Req() request: Request,
-    @Param() param: DefaultParamDto,
-  ) {
-    const cacheKey = `tournament:brackets:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getTournamentBrackets(@Param() param: DefaultParamDto) {
+    const cacheKey = `tournaments:${param.slug}:brackets`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -169,7 +158,7 @@ export class TournamentsController {
       );
     }
 
-    await this.redisCacheService.set(cacheKey, tournamentBrackets);
+    await this.redisCacheService.set(cacheKey, tournamentBrackets, 3600);
 
     return tournamentBrackets;
   }
@@ -195,11 +184,8 @@ export class TournamentsController {
     description: 'Service unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getTournamentStandings(
-    @Req() request: Request,
-    @Param() param: DefaultParamDto,
-  ) {
-    const cacheKey = `tournament:standings:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getTournamentStandings(@Param() param: DefaultParamDto) {
+    const cacheKey = `tournament:${param.slug}:standings`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -216,7 +202,7 @@ export class TournamentsController {
       );
     }
 
-    await this.redisCacheService.set(cacheKey, tournamentStandings);
+    await this.redisCacheService.set(cacheKey, tournamentStandings, 3600);
 
     return tournamentStandings;
   }
@@ -242,11 +228,8 @@ export class TournamentsController {
     description: 'Service unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getTournamentRosters(
-    @Req() request: Request,
-    @Param() param: DefaultParamDto,
-  ) {
-    const cacheKey = `tournament:rosters:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getTournamentRosters(@Param() param: DefaultParamDto) {
+    const cacheKey = `tournament:${param.slug}:rosters`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -263,7 +246,7 @@ export class TournamentsController {
       );
     }
 
-    await this.redisCacheService.set(cacheKey, tournamentRosters);
+    await this.redisCacheService.set(cacheKey, tournamentRosters, 3600);
 
     return tournamentRosters;
   }

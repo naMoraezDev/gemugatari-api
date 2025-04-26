@@ -1,6 +1,5 @@
 import {
   Get,
-  Req,
   Param,
   HttpCode,
   UseGuards,
@@ -8,7 +7,6 @@ import {
   Controller,
   NotFoundException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import {
   CategoryDto,
   CategoriesResponseDto,

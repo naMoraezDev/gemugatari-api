@@ -1,6 +1,5 @@
 import {
   Get,
-  Req,
   Query,
   Param,
   HttpCode,
@@ -16,7 +15,6 @@ import {
   ApiResponse,
   ApiOperation,
 } from '@nestjs/swagger';
-import { Request } from 'express';
 import { MatchDto } from './dtos/match.dto';
 import { MatchesService } from './matches.service';
 import { DetailedMatchDto } from './dtos/detailed-match.dto';
@@ -61,11 +59,8 @@ export class MatchesController {
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getMatches(
-    @Req() request: Request,
-    @Query() query: GetMatchesQueryDto,
-  ) {
-    const cacheKey = `matches:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getMatches(@Query() query: GetMatchesQueryDto) {
+    const cacheKey = 'matches';
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -75,7 +70,7 @@ export class MatchesController {
 
     const matches = await this.matchesService.getMatches(query);
 
-    await this.redisCacheService.set(cacheKey, matches);
+    await this.redisCacheService.set(cacheKey, matches, 3600);
 
     return matches;
   }
@@ -101,8 +96,8 @@ export class MatchesController {
     description: 'Service unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getMatch(@Req() request: Request, @Param() param: DefaultParamDto) {
-    const cacheKey = `match:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getMatch(@Param() param: DefaultParamDto) {
+    const cacheKey = `matches:${param.slug}`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 
@@ -142,11 +137,8 @@ export class MatchesController {
     description: 'Service unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getMatchOpponents(
-    @Req() request: Request,
-    @Param() param: DefaultParamDto,
-  ) {
-    const cacheKey = `match:opponents:${request.protocol}://${request.get('host')}${request.originalUrl}`;
+  async getMatchOpponents(@Param() param: DefaultParamDto) {
+    const cacheKey = `matches:${param.slug}:opponents`;
 
     const cached = await this.redisCacheService.get(cacheKey);
 

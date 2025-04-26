@@ -1,6 +1,5 @@
 import {
   Get,
-  Req,
   Param,
   HttpCode,
   UseGuards,
@@ -8,7 +7,6 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { TagsService } from './tags.service';
 import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
@@ -41,7 +39,7 @@ export class TagsController {
     description: 'Service Unavailable',
     status: HttpStatus.SERVICE_UNAVAILABLE,
   })
-  async getTags(@Req() request: Request) {
+  async getTags() {
     const cacheKey = 'tags';
 
     const cached = await this.redisCacheService.get(cacheKey);

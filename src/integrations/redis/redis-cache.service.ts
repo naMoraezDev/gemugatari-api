@@ -17,7 +17,7 @@ import {
 export class RedisCacheService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RedisCacheService.name);
 
-  private defaultTTL = 3600;
+  private defaultTTL = 86400;
 
   private cacheAvailable = false;
 
