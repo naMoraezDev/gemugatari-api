@@ -68,14 +68,16 @@ export class WordpressService {
               uri
               parentId
               description
-              template {
-                templateType
-                coverImage {
+              categoryExtraFields {
+                banner {
                   node {
                     altText
                     sourceUrl
                   }
                 }
+                template
+                headerBackground
+                headerText
                 highlights {
                   nodes {
                     ... on Post {
@@ -104,7 +106,7 @@ export class WordpressService {
                           id
                           slug
                           name
-                          extraFields {
+                          tagExtraFields {
                             icon {
                               node {
                                 altText
@@ -125,8 +127,8 @@ export class WordpressService {
                   name
                   uri
                   parentId
-                  template {
-                    coverImage {
+                  categoryExtraFields {
+                    banner {
                       node {
                         altText
                         sourceUrl
@@ -160,7 +162,7 @@ export class WordpressService {
                           id
                           slug
                           name
-                          extraFields {
+                          tagExtraFields {
                             icon {
                               node {
                                 altText
@@ -231,7 +233,7 @@ export class WordpressService {
                     id
                     slug
                     name
-                    extraFields {
+                    tagExtraFields {
                       icon {
                         node {
                           altText
@@ -309,7 +311,7 @@ export class WordpressService {
                     id
                     slug
                     name
-                    extraFields {
+                    tagExtraFields {
                       icon {
                         node {
                           altText
@@ -384,7 +386,7 @@ export class WordpressService {
                     id
                     slug
                     name
-                    extraFields {
+                    tagExtraFields {
                       icon {
                         node {
                           altText
@@ -472,7 +474,7 @@ export class WordpressService {
                   id
                   slug
                   name
-                  extraFields {
+                  tagExtraFields {
                     icon {
                       node {
                         altText
@@ -515,7 +517,7 @@ export class WordpressService {
                 id
                 slug
                 name
-                extraFields {
+                tagExtraFields {
                   icon {
                     node {
                       altText
