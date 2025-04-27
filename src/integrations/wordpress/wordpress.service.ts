@@ -1,22 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { PostData } from './interfaces/post-data.interface';
 import { DefaultParamDto } from '../../common/dtos/default-param.dto';
 import { httpClientFactory } from 'src/utils/http/http-client.factory';
 import { normalizeGraphQLData } from 'src/utils/graphql/normalize-data';
-import { WordPressPostResponse } from './interfaces/wp-post-response.interface';
 import { GetPostsBySearchQueryDto } from './dtos/get-posts-by-search-query.dto';
 import { GetPostsByCategoryQueryDto } from './dtos/get-posts-by-category-query.dto';
 
 @Injectable()
 export class WordpressService {
   private readonly wpBaseUrl: string;
-  private readonly wpAdminUsername: string;
-  private readonly wpAdminPassword: string;
 
   constructor() {
     this.wpBaseUrl = process.env.WP_BASE_URL || '';
-    this.wpAdminUsername = process.env.WP_ADMIN_USERNAME || '';
-    this.wpAdminPassword = process.env.WP_ADMIN_PASSWORD || '';
   }
 
   async getCategories() {
@@ -33,12 +27,11 @@ export class WordpressService {
             categories {
               edges {
                 node {
-                  count
                   id
-                  name
                   slug
-                  parentId
+                  name 
                   uri
+                  parentId
                 }
               }
             }
@@ -51,6 +44,8 @@ export class WordpressService {
       input: url,
       init: options,
     });
+
+    if (!result) return null;
 
     return normalizeGraphQLData(result.data);
   }
@@ -66,27 +61,116 @@ export class WordpressService {
       body: JSON.stringify({
         query: `
           {
-            category (id: "${param.slug}", idType: SLUG) {
-              count
+            category(id: "${param.slug}", idType: SLUG) {
               id
               slug
               name
-              description
-              parentId
               uri
+              parentId
+              description
               template {
-                customTemplate
-                cover {
+                templateType
+                coverImage {
                   node {
                     altText
                     sourceUrl
-                    sizes
                   }
                 }
                 highlights {
                   nodes {
-                    id
-                    slug
+                    ... on Post {
+                      id
+                      slug
+                      uri
+                      featuredImage {
+                        node {
+                          altText
+                          sourceUrl
+                        }
+                      }
+                      title
+                      excerpt
+                      categories {
+                        nodes {
+                          id
+                          slug
+                          name
+                          uri
+                          parentId
+                        }
+                      }
+                      tags {
+                        nodes {
+                          id
+                          slug
+                          name
+                          extraFields {
+                            icon {
+                              node {
+                                altText
+                                sourceUrl
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              children {
+                nodes {
+                  id
+                  slug
+                  name
+                  uri
+                  parentId
+                  template {
+                    coverImage {
+                      node {
+                        altText
+                        sourceUrl
+                      }
+                    }
+                  }
+                  posts(first: 3) {
+                    nodes {
+                      id
+                      slug
+                      uri
+                      featuredImage {
+                        node {
+                          altText
+                          sourceUrl
+                        }
+                      }
+                      title
+                      excerpt
+                      categories {
+                        nodes {
+                          id
+                          slug
+                          name
+                          uri
+                          parentId
+                        }
+                      }
+                      tags {
+                        nodes {
+                          id
+                          slug
+                          name
+                          extraFields {
+                            icon {
+                              node {
+                                altText
+                                sourceUrl
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -100,6 +184,8 @@ export class WordpressService {
       input: url,
       init: options,
     });
+
+    if (!result) return null;
 
     return normalizeGraphQLData(result.data);
   }
@@ -122,25 +208,22 @@ export class WordpressService {
               nodes {
                 id
                 slug
-                title
-                excerpt
-                date
-                modified
                 uri
                 featuredImage {
                   node {
                     altText
                     sourceUrl
-                    caption
-                    sizes
                   }
                 }
+                title
+                excerpt
                 categories {
                   nodes {
                     id
                     slug
                     name
                     uri
+                    parentId
                   }
                 }
                 tags {
@@ -177,6 +260,8 @@ export class WordpressService {
       init: options,
     });
 
+    if (!result) return null;
+
     return {
       pageInfo: result.data.posts.pageInfo,
       ...normalizeGraphQLData(result.data),
@@ -201,25 +286,22 @@ export class WordpressService {
               nodes {
                 id
                 slug
-                title
-                excerpt
-                date
-                modified
                 uri
                 featuredImage {
                   node {
                     altText
                     sourceUrl
-                    caption
-                    sizes
                   }
                 }
+                title
+                excerpt
                 categories {
                   nodes {
                     id
                     slug
                     name
                     uri
+                    parentId
                   }
                 }
                 tags {
@@ -255,6 +337,8 @@ export class WordpressService {
       input: url,
       init: options,
     });
+
+    if (!result) return null;
 
     return {
       pageInfo: result.data.posts.pageInfo,
@@ -277,25 +361,22 @@ export class WordpressService {
               nodes {
                 id
                 slug
-                title
-                excerpt
-                date
-                modified
                 uri
                 featuredImage {
                   node {
                     altText
                     sourceUrl
-                    caption
-                    sizes
                   }
                 }
+                title
+                excerpt
                 categories {
                   nodes {
                     id
                     slug
                     name
                     uri
+                    parentId
                   }
                 }
                 tags {
@@ -332,6 +413,8 @@ export class WordpressService {
       init: options,
     });
 
+    if (!result) return null;
+
     return {
       pageInfo: result.data.posts.pageInfo,
       ...normalizeGraphQLData(result.data),
@@ -352,6 +435,7 @@ export class WordpressService {
             post (id: "${param.slug}", idType: SLUG) {
               id
               slug
+              uri
               featuredImage {
                 node {
                   altText
@@ -380,6 +464,7 @@ export class WordpressService {
                   slug
                   name
                   uri
+                  parentId
                 }
               }
               tags {
@@ -408,6 +493,8 @@ export class WordpressService {
       init: options,
     });
 
+    if (!result) return null;
+
     return normalizeGraphQLData(result.data);
   }
 
@@ -433,7 +520,6 @@ export class WordpressService {
                     node {
                       altText
                       sourceUrl
-                      sizes
                     }
                   }
                 }
@@ -448,6 +534,8 @@ export class WordpressService {
       input: url,
       init: options,
     });
+
+    if (!result) return null;
 
     return normalizeGraphQLData(result.data);
   }
@@ -473,7 +561,6 @@ export class WordpressService {
                   node {
                     altText
                     sourceUrl
-                    sizes
                   }
                 }
               }
@@ -488,28 +575,8 @@ export class WordpressService {
       init: options,
     });
 
+    if (!result) return null;
+
     return normalizeGraphQLData(result.data);
-  }
-
-  async createDraftPost(postData: PostData) {
-    const auth = btoa(`${this.wpAdminUsername}:${this.wpAdminPassword}`);
-
-    postData.status = 'draft';
-
-    const url = `${this.wpBaseUrl}/wp-json/wp/v2/posts`;
-
-    const options = {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${auth}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postData),
-    };
-
-    return await httpClientFactory().request<WordPressPostResponse>({
-      input: url,
-      init: options,
-    });
   }
 }

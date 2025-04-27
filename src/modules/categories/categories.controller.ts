@@ -90,7 +90,7 @@ export class CategoriesController {
 
     const result = await this.categoriesService.getCategoryBySlug(param);
 
-    if (!result.category) {
+    if (!result?.category) {
       throw new NotFoundException(
         `Category with slug '${param.slug}' not found`,
       );
