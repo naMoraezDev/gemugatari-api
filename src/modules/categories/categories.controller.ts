@@ -7,15 +7,13 @@ import {
   Controller,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  CategoryDto,
-  CategoriesResponseDto,
-} from './dtos/categories-response.dto';
 import { CategoriesService } from './categories.service';
 import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
+import { CategoryResponseDto } from './dtos/category-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { ApiKeyAuth } from 'src/common/decorators/api-key.decorator';
+import { CategoriesResponseDto } from './dtos/categories-response.dto';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
@@ -70,7 +68,7 @@ export class CategoriesController {
     required: true,
   })
   @HttpCode(HttpStatus.OK)
-  @ApiResponseDecorator({ type: CategoryDto })
+  @ApiResponseDecorator({ type: CategoryResponseDto })
   @ApiResponse({
     description: 'Not Found',
     status: HttpStatus.NOT_FOUND,

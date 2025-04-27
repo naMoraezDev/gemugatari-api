@@ -18,11 +18,12 @@ import {
 } from '@nestjs/swagger';
 import { Request } from 'express';
 import { PostsService } from './posts.service';
+import { PostResponseDto } from './dtos/post-response.dto';
+import { PostsResponseDto } from './dtos/posts-response.dto';
 import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 import { ApiResponseDto } from 'src/common/dtos/api-response.dto';
 import { DefaultParamDto } from 'src/common/dtos/default-param.dto';
 import { ApiKeyAuth } from 'src/common/decorators/api-key.decorator';
-import { PostDto, PostsResponseDto } from './dtos/posts-response.dto';
 import { RedisCacheService } from 'src/integrations/redis/redis-cache.service';
 import { ApiResponseDecorator } from 'src/common/decorators/api-response.decorator';
 import { GetPostsBySearchQueryDto } from 'src/integrations/wordpress/dtos/get-posts-by-search-query.dto';
@@ -205,7 +206,7 @@ export class PostsController {
     required: true,
   })
   @HttpCode(HttpStatus.OK)
-  @ApiResponseDecorator({ type: PostDto })
+  @ApiResponseDecorator({ type: PostResponseDto })
   @ApiResponse({
     description: 'Not Found',
     status: HttpStatus.NOT_FOUND,

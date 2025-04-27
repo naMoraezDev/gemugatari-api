@@ -558,7 +558,7 @@ export class WordpressService {
               id
               slug
               name
-              extraFields {
+              tagExtraFields {
                 icon {
                   node {
                     altText

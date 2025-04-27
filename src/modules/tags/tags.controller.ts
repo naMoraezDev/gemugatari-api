@@ -87,7 +87,7 @@ export class TagsController {
 
     const result = await this.tagsService.getTagBySlug(param);
 
-    if (!result.tag) {
+    if (!result?.tag) {
       throw new NotFoundException(`Tag with slug '${param.slug}' not found`);
     }
 

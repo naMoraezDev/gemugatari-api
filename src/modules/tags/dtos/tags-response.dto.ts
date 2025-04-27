@@ -1,76 +1,90 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class TagLinksDto {
+class IconDto {
   @ApiProperty({
-    example:
-      'https://public-api.wordpress.com/rest/v1.1/sites/987654321/tags/slug:gaming-news',
+    example: 'Game icon alt text',
   })
-  self: string;
+  altText: string;
 
   @ApiProperty({
-    example:
-      'https://public-api.wordpress.com/rest/v1.1/sites/987654321/tags/slug:gaming-news/help',
+    example: 'https://example.com/game-icons/fantasy-game.png',
   })
-  help: string;
-
-  @ApiProperty({
-    example: 'https://public-api.wordpress.com/rest/v1.1/sites/987654321',
-  })
-  site: string;
+  sourceUrl: string;
 }
 
-export class TagMetaDto {
+class TagExtraFieldsDto {
   @ApiProperty({
-    type: TagLinksDto,
+    type: IconDto,
+    example: {
+      altText: 'Fantasy Game Icon',
+      sourceUrl: 'https://example.com/game-icons/fantasy-game.png',
+    },
   })
-  links: TagLinksDto;
+  icon: IconDto;
 }
 
 export class TagDto {
   @ApiProperty({
-    example: 56789012,
+    example: 42,
   })
-  ID: number;
+  count: number;
 
   @ApiProperty({
-    example: 'Gaming News',
+    example: 'abc123XYZ',
   })
-  name: string;
+  id: string;
 
   @ApiProperty({
-    example: 'gaming-news',
+    example: 'fantasy-game',
   })
   slug: string;
 
   @ApiProperty({
-    example: 'Latest updates from the gaming industry',
+    example: 'Fantasy Game',
   })
-  description: string;
+  name: string;
 
   @ApiProperty({
-    example: 12,
+    type: TagExtraFieldsDto,
+    example: {
+      icon: {
+        altText: 'Fantasy Game Icon',
+        sourceUrl: 'https://example.com/game-icons/fantasy-game.png',
+      },
+    },
   })
-  post_count: number;
-
-  @ApiProperty({
-    example: 'https://gamingblog.wordpress.com/tag/gaming-news/feed/',
-  })
-  feed_url: string;
-
-  @ApiProperty({
-    type: TagMetaDto,
-  })
-  meta: TagMetaDto;
+  tagExtraFields: TagExtraFieldsDto;
 }
 
 export class TagsResponseDto {
   @ApiProperty({
-    example: 8,
-  })
-  found: number;
-
-  @ApiProperty({
     type: [TagDto],
+    example: [
+      {
+        count: 42,
+        id: 'abc123XYZ',
+        slug: 'fantasy-game',
+        name: 'Fantasy Game',
+        tagExtraFields: {
+          icon: {
+            altText: 'Fantasy Game Icon',
+            sourceUrl: 'https://example.com/game-icons/fantasy-game.png',
+          },
+        },
+      },
+      {
+        count: 87,
+        id: 'def456UVW',
+        slug: 'space-shooter',
+        name: 'Space Shooter',
+        tagExtraFields: {
+          icon: {
+            altText: 'Space Shooter Icon',
+            sourceUrl: 'https://example.com/game-icons/space-shooter.png',
+          },
+        },
+      },
+    ],
   })
-  tags: TagDto[];
+  data: TagDto[];
 }

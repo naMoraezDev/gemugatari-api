@@ -1,82 +1,45 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CategoryLinksDto {
-  @ApiProperty({
-    example:
-      'https://public-api.wordpress.com/rest/v1.1/sites/456789123/categories/slug:league-of-legends',
-  })
-  self: string;
-
-  @ApiProperty({
-    example:
-      'https://public-api.wordpress.com/rest/v1.1/sites/456789123/categories/slug:league-of-legends/help',
-  })
-  help: string;
-
-  @ApiProperty({
-    example: 'https://public-api.wordpress.com/rest/v1.1/sites/456789123',
-  })
-  site: string;
-}
-
-export class CategoryMetaDto {
-  @ApiProperty({
-    type: CategoryLinksDto,
-  })
-  links: CategoryLinksDto;
-}
-
 export class CategoryDto {
   @ApiProperty({
-    example: 87654321,
+    example: 'dGVybTo2',
   })
-  ID: number;
+  id: string;
 
   @ApiProperty({
-    example: 'Rocket League',
-  })
-  name: string;
-
-  @ApiProperty({
-    example: 'rocket-league',
+    example: 'cod-mw',
   })
   slug: string;
 
   @ApiProperty({
-    example: 'Competitive car soccer game with rocket-powered vehicles',
+    example: 'COD MW',
   })
-  description: string;
+  name: string;
 
   @ApiProperty({
-    example: 12,
+    example: '/esports/cod-mw',
   })
-  post_count: number;
+  uri: string;
 
   @ApiProperty({
-    example:
-      'https://gamingblog.wordpress.com/category/esports/rocket-league/feed/',
+    example: 'dGVybToy',
+    nullable: true,
   })
-  feed_url: string;
-
-  @ApiProperty({
-    example: 9876,
-  })
-  parent: number;
-
-  @ApiProperty({
-    type: CategoryMetaDto,
-  })
-  meta: CategoryMetaDto;
+  parentId: string | null;
 }
 
 export class CategoriesResponseDto {
   @ApiProperty({
-    example: 8,
-  })
-  found: number;
-
-  @ApiProperty({
     type: [CategoryDto],
+    example: [
+      {
+        id: 'dGVybTo2',
+        slug: 'category',
+        name: 'Category',
+        uri: '/category',
+        parentId: 'dGVybToy',
+      },
+    ],
   })
   categories: CategoryDto[];
 }
