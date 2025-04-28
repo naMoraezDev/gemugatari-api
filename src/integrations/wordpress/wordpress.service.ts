@@ -434,7 +434,7 @@ export class WordpressService {
       body: JSON.stringify({
         query: `
           {
-            post (id: "${param.slug}", idType: SLUG) {
+            post (id: "nova-temporada-do-cs2-comeca-com-o-blast-bounty-qualifier-no-dia-14-de-janeiro", idType: SLUG) {
               id
               slug
               uri
@@ -479,6 +479,49 @@ export class WordpressService {
                       node {
                         altText
                         sourceUrl
+                      }
+                    }
+                  }
+                }
+              }
+              postExtraFields {
+                relatedPosts {
+                  nodes {
+                    ... on Post {
+                      id
+                      slug
+                      uri
+                      featuredImage {
+                        node {
+                          altText
+                          sourceUrl
+                        }
+                      }
+                      title
+                      excerpt
+                      categories {
+                        nodes {
+                          id
+                          slug
+                          name
+                          uri
+                          parentId
+                        }
+                      }
+                      tags {
+                        nodes {
+                          id
+                          slug
+                          name
+                          tagExtraFields {
+                            icon {
+                              node {
+                                altText
+                                sourceUrl
+                              }
+                            }
+                          }
+                        }
                       }
                     }
                   }

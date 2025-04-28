@@ -2,14 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 class AvatarDto {
   @ApiProperty({
-    example: 'https://example.com/avatars/user-profile.jpg',
+    example: 'https://example.com/avatars/profile-picture.jpg',
   })
   url: string;
 }
 
 class AuthorDto {
   @ApiProperty({
-    example: 'gamingReporter',
+    example: 'sportsReporter',
   })
   name: string;
 
@@ -21,7 +21,7 @@ class AuthorDto {
   @ApiProperty({
     type: AvatarDto,
     example: {
-      url: 'https://example.com/avatars/user-profile.jpg',
+      url: 'https://example.com/avatars/profile-picture.jpg',
     },
   })
   avatar: AvatarDto;
@@ -29,12 +29,12 @@ class AuthorDto {
 
 class FeaturedImageDto {
   @ApiProperty({
-    example: 'Gaming tournament crowd',
+    example: 'Esports tournament stage',
   })
   altText: string;
 
   @ApiProperty({
-    example: 'https://example.com/images/featured-esports-event.jpg',
+    example: 'https://example.com/images/esports-tournament.jpg',
   })
   sourceUrl: string;
 
@@ -51,39 +51,39 @@ class FeaturedImageDto {
 
 class CategoryDto {
   @ApiProperty({
-    example: 'cat123ABC',
+    example: 'cat123XYZ',
   })
   id: string;
 
   @ApiProperty({
-    example: 'esports-news',
+    example: 'esports-tournaments',
   })
   slug: string;
 
   @ApiProperty({
-    example: 'Esports News',
+    example: 'Esports Tournaments',
   })
   name: string;
 
   @ApiProperty({
-    example: '/news/esports-news',
+    example: '/esports/esports-tournaments',
   })
   uri: string;
 
   @ApiProperty({
-    example: 'parentCat456DEF',
+    example: 'parentCat456ABC',
   })
   parentId: string;
 }
 
 class IconDto {
   @ApiProperty({
-    example: 'Game icon',
+    example: 'Game logo',
   })
   altText: string;
 
   @ApiProperty({
-    example: 'https://example.com/icons/game-icon.png',
+    example: 'https://example.com/icons/game-logo.png',
   })
   sourceUrl: string;
 }
@@ -92,8 +92,8 @@ class TagExtraFieldsDto {
   @ApiProperty({
     type: IconDto,
     example: {
-      altText: 'Game icon',
-      sourceUrl: 'https://example.com/icons/game-icon.png',
+      altText: 'Game logo',
+      sourceUrl: 'https://example.com/icons/game-logo.png',
     },
   })
   icon: IconDto;
@@ -101,17 +101,17 @@ class TagExtraFieldsDto {
 
 class TagDto {
   @ApiProperty({
-    example: 'tag789XYZ',
+    example: 'tag789ABC',
   })
   id: string;
 
   @ApiProperty({
-    example: 'competitive-gaming',
+    example: 'fps-games',
   })
   slug: string;
 
   @ApiProperty({
-    example: 'Competitive Gaming',
+    example: 'FPS Games',
   })
   name: string;
 
@@ -119,35 +119,190 @@ class TagDto {
     type: TagExtraFieldsDto,
     example: {
       icon: {
-        altText: 'Game icon',
-        sourceUrl: 'https://example.com/icons/game-icon.png',
+        altText: 'Game logo',
+        sourceUrl: 'https://example.com/icons/game-logo.png',
       },
     },
   })
   tagExtraFields: TagExtraFieldsDto;
 }
 
-export class PostResponseDto {
+class RelatedPostFeaturedImageDto {
   @ApiProperty({
-    example: 'post123XYZ',
+    example: 'Player celebration',
+  })
+  altText: string;
+
+  @ApiProperty({
+    example: 'https://example.com/images/player-celebration.jpg',
+  })
+  sourceUrl: string;
+}
+
+class RelatedPostCategoryDto {
+  @ApiProperty({
+    example: 'cat123XYZ',
   })
   id: string;
 
   @ApiProperty({
-    example: 'new-game-update-features-announced',
+    example: 'esports-tournaments',
   })
   slug: string;
 
   @ApiProperty({
-    example: '/games/action/new-game-update-features-announced',
+    example: 'Esports Tournaments',
+  })
+  name: string;
+
+  @ApiProperty({
+    example: '/esports/esports-tournaments',
+  })
+  uri: string;
+
+  @ApiProperty({
+    example: 'parentCat456ABC',
+  })
+  parentId: string;
+}
+
+class RelatedPostTagDto {
+  @ApiProperty({
+    example: 'tag789ABC',
+  })
+  id: string;
+
+  @ApiProperty({
+    example: 'fps-games',
+  })
+  slug: string;
+
+  @ApiProperty({
+    example: 'FPS Games',
+  })
+  name: string;
+
+  @ApiProperty({
+    type: TagExtraFieldsDto,
+    example: {
+      icon: {
+        altText: 'Game logo',
+        sourceUrl: 'https://example.com/icons/game-logo.png',
+      },
+    },
+  })
+  tagExtraFields: TagExtraFieldsDto;
+}
+
+class RelatedPostDto {
+  @ApiProperty({
+    example: 'post456DEF',
+  })
+  id: string;
+
+  @ApiProperty({
+    example: 'tournament-finals-results',
+  })
+  slug: string;
+
+  @ApiProperty({
+    example: '/esports/fps-games/tournament-finals-results',
+  })
+  uri: string;
+
+  @ApiProperty({
+    type: RelatedPostFeaturedImageDto,
+    example: {
+      altText: 'Player celebration',
+      sourceUrl: 'https://example.com/images/player-celebration.jpg',
+    },
+  })
+  featuredImage: RelatedPostFeaturedImageDto;
+
+  @ApiProperty({
+    example: 'Tournament Finals Results: Surprising Victory',
+  })
+  title: string;
+
+  @ApiProperty({
+    example:
+      '<p>The finals of the international tournament concluded with an unexpected victory that shocked fans worldwide.</p>',
+  })
+  excerpt: string;
+
+  @ApiProperty({
+    type: [RelatedPostCategoryDto],
+    example: [
+      {
+        id: 'cat123XYZ',
+        slug: 'esports-tournaments',
+        name: 'Esports Tournaments',
+        uri: '/esports/esports-tournaments',
+        parentId: 'parentCat456ABC',
+      },
+    ],
+  })
+  categories: RelatedPostCategoryDto[];
+
+  @ApiProperty({
+    type: [RelatedPostTagDto],
+    example: [],
+  })
+  tags: RelatedPostTagDto[];
+}
+
+class PostExtraFieldsDto {
+  @ApiProperty({
+    type: [RelatedPostDto],
+    example: [
+      {
+        id: 'post456DEF',
+        slug: 'tournament-finals-results',
+        uri: '/esports/fps-games/tournament-finals-results',
+        featuredImage: {
+          altText: 'Player celebration',
+          sourceUrl: 'https://example.com/images/player-celebration.jpg',
+        },
+        title: 'Tournament Finals Results: Surprising Victory',
+        excerpt:
+          '<p>The finals of the international tournament concluded with an unexpected victory that shocked fans worldwide.</p>',
+        categories: [
+          {
+            id: 'cat123XYZ',
+            slug: 'esports-tournaments',
+            name: 'Esports Tournaments',
+            uri: '/esports/esports-tournaments',
+            parentId: 'parentCat456ABC',
+          },
+        ],
+        tags: [],
+      },
+    ],
+  })
+  relatedPosts: RelatedPostDto[];
+}
+
+export class PostResponseDto {
+  @ApiProperty({
+    example: 'post123ABC',
+  })
+  id: string;
+
+  @ApiProperty({
+    example: 'upcoming-tournament-preview',
+  })
+  slug: string;
+
+  @ApiProperty({
+    example: '/esports/fps-games/upcoming-tournament-preview',
   })
   uri: string;
 
   @ApiProperty({
     type: FeaturedImageDto,
     example: {
-      altText: 'Gaming tournament crowd',
-      sourceUrl: 'https://example.com/images/featured-esports-event.jpg',
+      altText: 'Esports tournament stage',
+      sourceUrl: 'https://example.com/images/esports-tournament.jpg',
       sizes: '(max-width: 300px) 100vw, 300px',
       caption: null,
     },
@@ -155,39 +310,39 @@ export class PostResponseDto {
   featuredImage: FeaturedImageDto;
 
   @ApiProperty({
-    example: 'New Game Update Features Announced',
+    example: 'Upcoming Tournament Preview: Everything You Need to Know',
   })
   title: string;
 
   @ApiProperty({
     example:
-      '<p>The newest update brings exciting features and gameplay improvements that players have been requesting for months.</p>',
+      '<p>The biggest tournament of the year is just around the corner with 32 teams competing for the championship title and a prize pool of $2 million.</p>',
   })
   excerpt: string;
 
   @ApiProperty({
-    example: '2025-02-15T10:30:00',
+    example: '2025-01-15T10:30:00',
   })
   date: string;
 
   @ApiProperty({
-    example: '2025-02-16T14:45:22',
+    example: '2025-01-16T14:45:22',
   })
   modified: string;
 
   @ApiProperty({
     example:
-      '<p>The newest update brings exciting features and gameplay improvements that players have been requesting for months.</p><h2>Key Features</h2><ul><li>New character customization options</li><li>Enhanced battle system</li><li>More challenging gameplay modes</li></ul>',
+      '<p>The biggest tournament of the year is just around the corner with 32 teams competing for the championship title and a prize pool of $2 million.</p><h2>Format and Teams</h2><p>The tournament will feature a single-elimination bracket with best-of-three matches throughout.</p><h2>Prize Distribution</h2><p>The total prize pool will be distributed based on final placement and performance bonuses.</p>',
   })
   content: string;
 
   @ApiProperty({
     type: AuthorDto,
     example: {
-      name: 'gamingReporter',
+      name: 'sportsReporter',
       email: null,
       avatar: {
-        url: 'https://example.com/avatars/user-profile.jpg',
+        url: 'https://example.com/avatars/profile-picture.jpg',
       },
     },
   })
@@ -197,11 +352,11 @@ export class PostResponseDto {
     type: [CategoryDto],
     example: [
       {
-        id: 'cat123ABC',
-        slug: 'esports-news',
-        name: 'Esports News',
-        uri: '/news/esports-news',
-        parentId: 'parentCat456DEF',
+        id: 'cat123XYZ',
+        slug: 'esports-tournaments',
+        name: 'Esports Tournaments',
+        uri: '/esports/esports-tournaments',
+        parentId: 'parentCat456ABC',
       },
     ],
   })
@@ -211,17 +366,48 @@ export class PostResponseDto {
     type: [TagDto],
     example: [
       {
-        id: 'tag789XYZ',
-        slug: 'competitive-gaming',
-        name: 'Competitive Gaming',
+        id: 'tag789ABC',
+        slug: 'fps-games',
+        name: 'FPS Games',
         tagExtraFields: {
           icon: {
-            altText: 'Game icon',
-            sourceUrl: 'https://example.com/icons/game-icon.png',
+            altText: 'Game logo',
+            sourceUrl: 'https://example.com/icons/game-logo.png',
           },
         },
       },
     ],
   })
   tags: TagDto[];
+
+  @ApiProperty({
+    type: PostExtraFieldsDto,
+    example: {
+      relatedPosts: [
+        {
+          id: 'post456DEF',
+          slug: 'tournament-finals-results',
+          uri: '/esports/fps-games/tournament-finals-results',
+          featuredImage: {
+            altText: 'Player celebration',
+            sourceUrl: 'https://example.com/images/player-celebration.jpg',
+          },
+          title: 'Tournament Finals Results: Surprising Victory',
+          excerpt:
+            '<p>The finals of the international tournament concluded with an unexpected victory that shocked fans worldwide.</p>',
+          categories: [
+            {
+              id: 'cat123XYZ',
+              slug: 'esports-tournaments',
+              name: 'Esports Tournaments',
+              uri: '/esports/esports-tournaments',
+              parentId: 'parentCat456ABC',
+            },
+          ],
+          tags: [],
+        },
+      ],
+    },
+  })
+  postExtraFields: PostExtraFieldsDto;
 }
